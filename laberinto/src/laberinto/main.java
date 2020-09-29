@@ -7,7 +7,7 @@ public class main {
 	Celda [][] laberinto;
 	Celda [] vecinos;
 	final String [] id_movimientos= {"N","E","S","O"};
-	int [][] movimientos= {(-1,0),(0,1),(1,0),(0,-1)};
+	final int [][] movimientos= {(-1,0),(0,1),(1,0),(0,-1)};
 	
 	public void iniciar() {
 		int contador=0;
