@@ -11,7 +11,6 @@ public class Celda {
 		this.visitado=false;
 		this.id_movimientos= {'N','E','S','O'};
 	}
-	 
 	
 	public boolean isVisitado() {
 		return visitado;
@@ -26,5 +25,4 @@ public class Celda {
 		this.id = id;
 	}
 	
-
 }
