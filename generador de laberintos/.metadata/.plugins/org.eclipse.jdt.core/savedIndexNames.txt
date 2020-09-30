@@ -1,3 +1,0 @@
-INDEX VERSION 1.131+C:\Users\vic_s\Desktop\java-maze-algorithms-master\.metadata\.plugins\org.eclipse.jdt.core
-2956040621.index
-1671692264.index
