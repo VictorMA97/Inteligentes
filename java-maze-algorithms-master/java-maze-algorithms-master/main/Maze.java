@@ -11,7 +11,6 @@ import java.util.Hashtable;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -19,7 +18,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 public class Maze {
 
@@ -29,12 +27,6 @@ public class Maze {
 	
 	public static int speed = 1;
 	public static boolean generated, solved;
-	
-	private static final String[] GENERATION_METHODS = {"0. Aldous-Broder", "1. Binary Tree", 
-			"2. DFS", "3. Eller's", "4. Growing Forest", "5. Growing Tree", "6. Houston's", 
-			"7. Hunt & Kill", "8. Kruskal's", "9. Prim's", "10. Quad-directional DFS", "11. Sidewinder", 
-			"12. Spiral Backtracker", "13. Wilson's", "14. Zig-Zag"};
-	private static final String[] SOLVING_METHODS = {"0. Bi-directional DFS", "1. BFS", "2. DFS", "3. Dijkstra's"};
 
 	private int cols, rows;
 
@@ -84,16 +76,7 @@ public class Maze {
 		CardLayout cardLayout = new CardLayout();
 
 		JButton runButton = new JButton("Run");
-		JButton solveButton = new JButton("Solve");
 		JButton resetButton = new JButton("Reset");
-		JButton solveAgainButton = new JButton("Solve Again");
-		
-        JComboBox<String> genMethodsComboBox = new JComboBox<>(GENERATION_METHODS);
-        JComboBox<String> solveMethodsComboBox = new JComboBox<>(SOLVING_METHODS);
-        
-        // may need to comment these out if running on small resolution!!!
-        genMethodsComboBox.setMaximumRowCount(genMethodsComboBox.getModel().getSize()); 
-        solveMethodsComboBox.setMaximumRowCount(solveMethodsComboBox.getModel().getSize());
  
         JSlider initialSpeedSlider = new JSlider(JSlider.HORIZONTAL, 1, 40, 1);
         JSlider genSpeedSlider = new JSlider(JSlider.HORIZONTAL, 1, 40, 1);
@@ -126,19 +109,11 @@ public class Maze {
 	 
 	    c.insets = new Insets(5, 0, 5, 18);
 	    c.fill = GridBagConstraints.BOTH;
-	    c.weightx = 0.7;
-	    c.gridx = 0;
-		c.gridy = 0;
-		card1.add(genMethodsComboBox, c);
-		card2.add(solveMethodsComboBox, c);
-		
-		
 		c.gridheight = 2;
 		c.weightx = 0.3;
 		c.gridx = 1;
 		c.gridy = 0;
 		card1.add(runButton, c);
-		card2.add(solveButton, c);
 		
 		c.gridheight = 1;
 		c.gridx = 0;
@@ -148,9 +123,6 @@ public class Maze {
 
 		JPanel card3 = new JPanel();
 		card3.setLayout(new GridBagLayout());
-		c.gridx = 0;
-		c.gridy = 0;
-		card3.add(solveAgainButton, c);
 		c.gridx = 0;
 		c.gridy = 1;
 		card3.add(resetButton, c);
@@ -180,28 +152,9 @@ public class Maze {
 			 speed = initialSpeedSlider.getValue();
 			 generated = false;
 			 solved = false;
-			 grid.generate(genMethodsComboBox.getSelectedIndex());
+			 grid.generate();
 			 genSpeedSlider.setValue(speed);
 		     cardLayout.next(cards);
-		});
-
-		solveButton.addActionListener(event -> {
-			if (generated) {
-				grid.solve(solveMethodsComboBox.getSelectedIndex());	
-				cardLayout.last(cards);
-				solveSpeedSlider.setValue(speed);
-			} else {
-				JOptionPane.showMessageDialog(frame, "Please wait until the maze has been generated.");
-			}
-		});
-		
-		solveAgainButton.addActionListener(event -> {
-			if (solved) {				
-				grid.resetSolution();
-				cardLayout.show(cards, "solve");
-			} else {
-				JOptionPane.showMessageDialog(frame, "Please wait until the maze has been solved.");
-			}
 		});
 		
 		resetButton.addActionListener(event -> createAndShowGUI());

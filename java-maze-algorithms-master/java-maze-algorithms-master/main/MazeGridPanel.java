@@ -9,7 +9,6 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import generator.*;
-import solver.*;
 import util.Cell;
 
 public class MazeGridPanel extends JPanel {
@@ -32,78 +31,9 @@ public class MazeGridPanel extends JPanel {
 		return new Dimension(Maze.WIDTH + 1, Maze.HEIGHT + 1);
 	}
 
-	public void generate(int index) {
+	public void generate() {
 		// switch statement for gen method read from combobox in Maze.java
-		switch (index) {
-		case 0:
-			new AldousBroderGen(grid, this);
-			break;
-		case 1:
-			new BinaryTreeGen(grid, this);
-			break;
-		case 2:
-			new DFSGen(grid, this);
-			break;
-		case 3:
-			new EllersGen(grid, this);
-			break;
-		case 4:
-			new GrowingForestGen(grid, this);
-			break;
-		case 5:
-			new GrowingTreeGen(grid, this);
-			break;
-		case 6:
-			new HoustonGen(grid, this);;
-			break;
-		case 7:
-			new HuntAndKillGen(grid, this);
-			break;
-		case 8:
-			new KruskalsGen(grid, this);;
-			break;
-		case 9:
-			new PrimsGen(grid, this);
-			break;
-		case 10:
-			new QuadDFSGen(grid, this);
-			break;
-		case 11:
-			new SidewinderGen(grid, this);
-			break;
-		case 12:
-			new SpiralBacktrackerGen(grid, this);
-			break;
-		case 13:
-			new WilsonsGen(grid, this);
-			break;
-		case 14:
-			new ZigZagGen(grid, this);
-			break;
-		default:
-			new GrowingTreeGen(grid, this);
-			break;
-		}
-	}
-
-	public void solve(int index) {
-		switch (index) {
-		case 0:
-			new BiDFSSolve(grid, this);
-			break;
-		case 1:
-			new BFSSolve(grid, this);
-			break;
-		case 2: 
-			new DFSSolve(grid, this);
-			break;
-		case 3:
-			new DijkstraSolve(grid, this);
-			break;
-		default:
-			new DijkstraSolve(grid, this);
-			break;
-		}
+		new WilsonsGen(grid, this);
 	}
 	
 	public void resetSolution() {
