@@ -10,7 +10,7 @@ import main.Maze;
 
 public class Cell {
 
-	private int x, y, distance, id;
+	private int x, y, id;
 	
 	private Cell parent;
 	
@@ -31,7 +31,6 @@ public class Cell {
 	public Cell(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.distance = -1;
 	}
 	
 	public int getX() {
@@ -72,14 +71,6 @@ public class Cell {
 
 	public void setPath(boolean path) {
 		this.path = path;
-	}
-	
-	public int getDistance() {
-		return distance;
-	}
-
-	public void setDistance(int distance) {
-		this.distance = distance;
 	}
 
 	public Cell getParent() {
@@ -187,133 +178,6 @@ public class Cell {
 			return neighbours.get(0);
 		}
 		return randomNeighbour(neighbours);
-	}
-
-	public Cell getUnvisitedNeighbour(List<Cell> grid) {
-		
-		List<Cell> neighbours = getUnvisitedNeighboursList(grid);
-		
-		if (neighbours.size() ==  1) {
-			return neighbours.get(0);
-		}
-		return randomNeighbour(neighbours);
-	}
-	
-	public List<Cell> getUnvisitedNeighboursList(List<Cell> grid) {
-		
-		List<Cell> neighbours = new ArrayList<Cell>(4);
-		
-		Cell top = checkNeighbourInGridBounds(grid, new Cell(x, y - 1));
-		Cell right = checkNeighbourInGridBounds(grid, new Cell(x + 1, y));
-		Cell bottom = checkNeighbourInGridBounds(grid, new Cell(x, y + 1));
-		Cell left = checkNeighbourInGridBounds(grid, new Cell(x - 1, y));
-		
-		if (top != null) if(!top.visited) neighbours.add(top);
-		if (right != null) if(!right.visited) neighbours.add(right);
-		if (bottom != null)if(!bottom.visited) neighbours.add(bottom);
-		if (left != null) if(!left.visited)neighbours.add(left);
-		
-		return neighbours;
-	}
-	
-	// no walls between
-	public List<Cell> getValidMoveNeighbours(List<Cell> grid) {
-		List<Cell> neighbours = new ArrayList<Cell>(4);
-		
-		Cell top = checkNeighbourInGridBounds(grid, new Cell(x, y - 1));
-		Cell right = checkNeighbourInGridBounds(grid, new Cell(x + 1, y));
-		Cell bottom = checkNeighbourInGridBounds(grid, new Cell(x, y + 1));
-		Cell left = checkNeighbourInGridBounds(grid, new Cell(x - 1, y));
-		
-		if (top != null) {
-			if (!walls[0]) neighbours.add(top);
-		}	
-		
-		if (right != null) {
-			if (!walls[1]) neighbours.add(right);
-		}
-		
-		if (bottom != null) {
-			if (!walls[2]) neighbours.add(bottom);
-		}
-		
-		if (left != null) {
-			if (!walls[3]) neighbours.add(left);
-		}
-		
-		return neighbours;
-	}
-	
-	// used for DFS solving, gets a neighbour that could potentially be part of the solution path.
-	public Cell getPathNeighbour(List<Cell> grid) {
-		List<Cell> neighbours = new ArrayList<Cell>();
-		
-		Cell top = checkNeighbourInGridBounds(grid, new Cell(x, y - 1));
-		Cell right = checkNeighbourInGridBounds(grid, new Cell(x + 1, y));
-		Cell bottom = checkNeighbourInGridBounds(grid, new Cell(x, y + 1));
-		Cell left = checkNeighbourInGridBounds(grid, new Cell(x - 1, y));
-		
-		if (top != null) {
-			if (!top.deadEnd) {
-				if (!walls[0]) neighbours.add(top);
-			}
-		}
-		
-		if (right != null) {
-			if (!right.deadEnd) {
-				if (!walls[1]) neighbours.add(right);
-			}
-		}
-		
-		if (bottom != null) {
-			if (!bottom.deadEnd) {
-				if (!walls[2]) neighbours.add(bottom);
-			}
-		}
-		
-		if (left != null) {
-			if (!left.deadEnd) {
-				if (!walls[3]) neighbours.add(left);
-			}
-		}
-		
-		if (neighbours.size() ==  1) {
-			return neighbours.get(0);
-		}
-		
-		return randomNeighbour(neighbours);
-	}
-	
-	public List<Cell> getAllNeighbours(List<Cell> grid) {
-		List<Cell> neighbours = new ArrayList<Cell>();
-		
-		Cell top = checkNeighbourInGridBounds(grid, new Cell(x, y - 1));
-		Cell right = checkNeighbourInGridBounds(grid, new Cell(x + 1, y));
-		Cell bottom = checkNeighbourInGridBounds(grid, new Cell(x, y + 1));
-		Cell left = checkNeighbourInGridBounds(grid, new Cell(x - 1, y));
-		
-		if (top != null) neighbours.add(top);
-		if (right != null) neighbours.add(right);
-		if (bottom != null) neighbours.add(bottom);
-		if (left != null) neighbours.add(left);
-		
-		return neighbours;
-	}
-	
-	public Cell getTopNeighbour(List<Cell> grid) {
-		return checkNeighbourInGridBounds(grid, new Cell(x, y - 1));
-	}
-	
-	public Cell getRightNeighbour(List<Cell> grid) {
-		return checkNeighbourInGridBounds(grid, new Cell(x + 1, y));
-	}
-	
-	public Cell getBottomNeighbour(List<Cell> grid) {
-		return checkNeighbourInGridBounds(grid, new Cell(x, y + 1));
-	}
-	
-	public Cell getLeftNeighbour(List<Cell> grid) {
-		return checkNeighbourInGridBounds(grid, new Cell(x - 1, y));
 	}
 	
 	@Override

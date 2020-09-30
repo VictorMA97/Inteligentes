@@ -6,7 +6,7 @@ public class Celda {
 	private int fila;
 	private int columna;
 	private boolean visitado;
-	private boolean [] vecinos=new boolean[4];
+	private boolean [] vecinos= {true, true, true, true};
 	
 	public Celda(int id,int x, int y) {
 		this.id=id;
