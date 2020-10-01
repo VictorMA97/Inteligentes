@@ -189,7 +189,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void bGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGenerarActionPerformed
         // TODO add your handling code here:
-        Main m = new Main();
+        Wilson m = new Wilson();
         try{
             m.setFilas(Integer.parseInt(tFilas.getText().trim()));
             m.setColumnas(Integer.parseInt(tColumnas.getText().trim())); 

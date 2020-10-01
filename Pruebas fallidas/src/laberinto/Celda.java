@@ -113,23 +113,27 @@ public class Celda {
 		}
 	}
 	
-	private Celda validarVecino (List<Celda> grid, Celda vecino) {
-		if (grid.contains(vecino)) {
-			return grid.get(grid.indexOf(vecino));
-		} else {
-			return null;
-		}
-	}
+	private Celda validarVecino (Celda[][] l, Celda vecino) {
+            Celda aux = null;
+            for(int i=0;i<l.length;i++){
+                for(int j=0;j<l[i].length;j++){
+                    if(l[i][j].equals(vecino)){
+                        aux= l[i][j];
+                    }
+                }
+            }
+            return aux;
+        }
 	
 	// Used for Wilson's algorithm
-	public Celda getNonPathNeighbour(List<Celda> celdas) {
+	public Celda getNonPathNeighbour(Celda[][] lab) {
 
 		List<Celda> vecinos = new ArrayList<>(4);
 		
-		Celda top = validarVecino(celdas, new Celda(fila, columna - 1));
-		Celda right = validarVecino(celdas, new Celda(fila + 1, columna));
-		Celda bottom = validarVecino(celdas, new Celda(fila, columna + 1));
-		Celda left = validarVecino(celdas, new Celda(fila - 1, columna));
+		Celda top = validarVecino(lab, new Celda(fila, columna - 1));
+		Celda right = validarVecino(lab, new Celda(fila + 1, columna));
+		Celda bottom = validarVecino(lab, new Celda(fila, columna + 1));
+		Celda left = validarVecino(lab, new Celda(fila - 1, columna));
 		
 		if (top != null) if(!top.camino) vecinos.add(top);
 		if (right != null) if(!right.camino) vecinos.add(right);
@@ -141,6 +145,18 @@ public class Celda {
 		}
 		return vecinoAleatorio(vecinos);
 	}
-
-	
+        public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Celda other = (Celda) obj;
+		if (fila != other.fila)
+			return false;
+		if (columna != other.columna)
+			return false;
+		return true;
+	}
 }
