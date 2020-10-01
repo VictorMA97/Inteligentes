@@ -118,17 +118,14 @@ public class Interfaz extends javax.swing.JFrame {
         setName("Inicio"); // NOI18N
         setResizable(false);
 
-    /*cuando el usuario de al botÃ³n de generar tiene que llamar a la clase de wilson, pasarle el num: de filas y de columnas.
-         * y que se muestre por pantalla el proceso de wilson.*/
-
-        bGenerar.setText("Generar"); 
+        bGenerar.setText("Generar"); // da un error al generar. Cuando el usuario de aquí hay que llamar a wilson para que lo ejecute
         bGenerar.setToolTipText("");
         bGenerar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bGenerarActionPerformed(evt);
             }
         });
-
+    
         bSalir.setText("Salir");
         bSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bSalir.addActionListener(new java.awt.event.ActionListener() {
