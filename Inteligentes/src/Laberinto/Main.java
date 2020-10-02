@@ -17,32 +17,37 @@ public class Main {
         boolean bucle = false;
         String rut;
         rut = null;
+        int option=0;
         System.out.println("1.Generar laberinto.\n2.Leer fichero json.\n3.Salir.");
         System.out.println("Introduza la opcion del menu:");
-        try {
-            int option = teclado.nextInt();
-            switch (option) {
-                case 1:
-                    pedir_datos();
-                    Wilson w = new Wilson();
-                    laberinto = w.getLaberinto();
-                    //Dibujamos
-                    break;
-                case 2:
-                    rut = leer_json();
-                    Gestor_Archivos.leerArchivoJson(rut);//Leer json.
-                    break;
-                case 3:
-                    System.exit(0);
-                    break;
-                default:
-                    System.err.println("Solo valores entre 1 y 3.");
-                    menu();
+        do {
+            try {
+                option = teclado.nextInt();
+                switch (option) {
+                    case 1:
+                        pedir_datos();
+                        Wilson w = new Wilson();
+                        laberinto = w.getLaberinto();
+                        Gestor_Archivos.dibujarPNG();//Dibujamos
+                        bucle=false;
+                        break;
+                    case 2:
+                        rut = leer_json();
+                        Gestor_Archivos.leerArchivoJson(rut);//Leer json.
+                        bucle=false;
+                        break;
+                    case 3:
+                        System.exit(0);
+                        break;
+                    default:
+                        System.err.println("Solo valores entre 1 y 3.");
+                        bucle = true;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Error solo datos numericos.");
+                bucle = true;
             }
-        } catch (Exception e) {
-            System.err.println("Error solo datos numericos.");
-            menu();
-        }
+        } while (bucle);
     }
 
     private static void pedir_datos() {
