@@ -167,6 +167,41 @@ public class Celda {
 			return "(" + fila + ", " + columna + ") { vecinos: " +  Arrays.toString(muros) + "}";
 					
 		}
+
+		public Celda irNorte(Celda actual , Celda[][] lab) {
+			int fila, columna;
+			fila=actual.getFila();
+			columna=actual.getColumna();
+			lab[fila+1][columna].setVisitado(true);
+			return actual;
+		}
+
+		public Celda irEste(Celda actual, Celda[][] lab) {
+			int fila, columna;
+			fila=actual.getFila();
+			columna=actual.getColumna();
+			lab[fila][columna+1].setVisitado(true);
+			return actual;
+			
+		}
+
+		public Celda irSur(Celda actual, Celda[][] lab) {
+			int fila, columna;
+			fila=actual.getFila();
+			columna=actual.getColumna();
+			lab[fila-1][columna].setVisitado(true);
+			return actual;
+			
+		}
+
+		public Celda irOeste(Celda actual, Celda[][] lab) {
+			int fila, columna;
+			fila=actual.getFila();
+			columna=actual.getColumna();
+			lab[fila-1][columna].setVisitado(true);
+			return actual;
+			
+		}
       
     
         
