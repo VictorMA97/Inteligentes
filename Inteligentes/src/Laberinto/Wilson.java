@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-public class Wilson {
+public class Wilsonn {
 
 	private int columnas = 4;
 	private int filas = 4;
@@ -18,12 +18,12 @@ public class Wilson {
 			}
 	}
 
-	public Wilson() {
+	public Wilsonn() {
 		inicializar_laberinto();
 		Celda celdaInicial = actual;
 
 		celdaInicial.setVisitado(true);
-		boolean opcionCorrecta = false;
+		
 		do {
 			try {
 				actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
@@ -35,23 +35,14 @@ public class Wilson {
 					if ((actual.getFila() == 0 || actual.getFila() == laberinto.length - 1)
 							|| (actual.getColumna() == 0 || actual.getColumna() == laberinto.length - 1)) {
 						opcion = controlarEsquinas();
-						stack.add(actual);
-					} else if ((actual.getFila() > 0 && actual.getFila() < laberinto.length - 1
-							&& actual.getColumna() == 0) // izquierda
-							|| (actual.getFila() == 0 && actual.getColumna() > 0
-									&& actual.getColumna() < laberinto.length - 1) // arriba
-							|| (actual.getColumna() == laberinto.length - 1 && actual.getFila() > 0
-									&& actual.getFila() < laberinto.length - 1) // derecha
-							|| (actual.getFila() == laberinto.length - 1 && actual.getColumna() > 0
-									&& actual.getColumna() < laberinto.length - 1)) { //abajo
-						opcion = controlarLados();
-						stack.add(actual);
-					} else {
+						
+					}else {
+						
 						do {
-						opcion=r.nextInt(5);
+							opcion=r.nextInt(5);
 						}while(opcion<1);
+						
 					}
-
 						switch (opcion) {
 
 						case 1:
@@ -74,6 +65,7 @@ public class Wilson {
 							stack.add(actual);
 							break;
 						default:
+							break;
 
 						}
 					
@@ -118,6 +110,8 @@ public class Wilson {
 
 			} while (opcion != 1 || opcion != 4);
 
+		}else {
+			opcion=controlarLados();
 		}
 		return opcion;
 
