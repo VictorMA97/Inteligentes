@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-public class Wilsonn {
+public class Wilson {
 
 	private int columnas = 4;
 	private int filas = 4;
@@ -20,59 +20,78 @@ public class Wilsonn {
 
 	public Wilsonn() {
 		inicializar_laberinto();
-		Celda celdaInicial = actual;
-
-		celdaInicial.setVisitado(true);
 		
+		
+		actual.setVisitado(true);
+		actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
+		stack.add(actual);
+		
+		 
+		int opcion;
 		do {
-				actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
-				stack.add(actual);
-				int opcion = 0;
+				
+			boolean caminoEncontrado=false;
+			
+				 opcion = 0;
 
-				do {
-
+					System.out.println("Fila: "+actual.getFila()+" Columna: "+actual.getColumna());
+					
 					if ((actual.getFila() == 0 || actual.getFila() == laberinto.length - 1)
 							|| (actual.getColumna() == 0 || actual.getColumna() == laberinto.length - 1)) {
 						opcion = controlarEsquinas();
+						System.out.println("hola opcion: "+opcion);
+						
 						
 					}else {
 						
 						do {
 							opcion=r.nextInt(5);
 						}while(opcion<1);
+						System.out.println("hola2 opcion: "+opcion);
 						
 					}
+					System.out.println("opciondespues: "+opcion);
 						switch (opcion) {
 
 						case 1:
 							actual = actual.irNorte(actual, laberinto);
 							stack.add(actual);
+							System.out.println(stack);
 							break;
 
 						case 2:
 							actual = actual.irEste(actual, laberinto);
 							stack.add(actual);
+							System.out.println(stack);
 							break;
 
 						case 3:
 							actual = actual.irSur(actual, laberinto);
 							stack.add(actual);
+							System.out.println(stack);
 							break;
 
 						case 4:
 							actual = actual.irOeste(actual, laberinto);
 							stack.add(actual);
+							System.out.println(stack);
 							break;
 						default:
 							break;
 
 						}
 					
-				} while (!actual.isVisitado());
+					if(actual.isVisitado()==false) {
+						actual.setVisitado(true);
+					}else {
+						caminoEncontrado = true;
+						stack.clear();
+						actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
+					}
 
 			
 
-			stack.clear();
+			
 		} while (!laberintoCompleto(laberinto));
 	}
 
