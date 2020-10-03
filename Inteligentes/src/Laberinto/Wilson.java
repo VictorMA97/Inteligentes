@@ -47,6 +47,10 @@ public class Wilson {
 						opcion = controlarLados();
 						stack.add(actual);
 					} else {
+						do {
+						opcion=r.nextInt(5);
+						}while(opcion<1);
+					}
 
 						switch (opcion) {
 
@@ -72,7 +76,7 @@ public class Wilson {
 						default:
 
 						}
-					}
+					
 				} while (!actual.isVisitado());
 
 			} catch (Exception e) {
