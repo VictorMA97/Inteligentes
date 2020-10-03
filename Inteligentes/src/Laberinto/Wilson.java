@@ -25,7 +25,6 @@ public class Wilsonn {
 		celdaInicial.setVisitado(true);
 		
 		do {
-			try {
 				actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
 				stack.add(actual);
 				int opcion = 0;
@@ -71,10 +70,7 @@ public class Wilsonn {
 					
 				} while (!actual.isVisitado());
 
-			} catch (Exception e) {
-
-				e.printStackTrace();
-			}
+			
 
 			stack.clear();
 		} while (!laberintoCompleto(laberinto));
@@ -102,13 +98,12 @@ public class Wilsonn {
 
 			} while (opcion < 3 || opcion > 4);
 
-		} else if (actual.getFila() == laberinto.length - 1 && actual.getColumna() == laberinto.length - 1) { // esquina
-																												// inferior
+		} else if (actual.getFila() == laberinto.length - 1 && actual.getColumna() == laberinto.length - 1) {   // esquina																								// inferior
 																												// derecha
 			do {
 				opcion = r.nextInt(5);
 
-			} while (opcion != 1 || opcion != 4);
+			} while (opcion != 1 && opcion != 4);
 
 		}else {
 			opcion=controlarLados();
@@ -125,25 +120,25 @@ public class Wilsonn {
 			do {
 				opcion = r.nextInt(5);
 
-			} while (opcion == 4);
+			} while (opcion == 4 || opcion==0);
 
 		} else if (actual.getFila() == 0) { // lado superior
 			do {
 				opcion = r.nextInt(5);
 
-			} while (opcion == 1);
+			} while (opcion == 1 || opcion==0);
 
 		} else if (actual.getColumna() == laberinto.length - 1) { // lado derecho
 			do {
 				opcion = r.nextInt(5);
 
-			} while (opcion == 2);
+			} while (opcion == 2 || opcion==0);
 
 		} else if (actual.getFila() == laberinto.length - 1) { // lado inferior
 			do {
 				opcion = r.nextInt(5);
 
-			} while (opcion == 3);
+			} while (opcion == 3 || opcion==0);
 
 		}
 		return opcion;
