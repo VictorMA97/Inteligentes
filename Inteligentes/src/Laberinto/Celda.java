@@ -173,6 +173,7 @@ public class Celda {
 			fila=actual.getFila();
 			columna=actual.getColumna();
 			lab[fila+1][columna].setVisitado(true);
+			actual=lab[fila+1][columna];
 			return actual;
 		}
 
@@ -181,6 +182,7 @@ public class Celda {
 			fila=actual.getFila();
 			columna=actual.getColumna();
 			lab[fila][columna+1].setVisitado(true);
+			actual=lab[fila][columna+1];
 			return actual;
 			
 		}
@@ -190,6 +192,7 @@ public class Celda {
 			fila=actual.getFila();
 			columna=actual.getColumna();
 			lab[fila-1][columna].setVisitado(true);
+			actual=lab[fila-1][columna];
 			return actual;
 			
 		}
@@ -199,6 +202,7 @@ public class Celda {
 			fila=actual.getFila();
 			columna=actual.getColumna();
 			lab[fila-1][columna].setVisitado(true);
+			actual=lab[fila-1][columna];
 			return actual;
 			
 		}
