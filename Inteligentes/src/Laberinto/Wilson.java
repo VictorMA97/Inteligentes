@@ -26,53 +26,131 @@ public class Wilson {
 		boolean opcionCorrecta = false;
 		do {
 			try {
-				actual = laberinto[r.nextInt(filas) * 100][r.nextInt(columnas) * 100];
+				actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
 				stack.add(actual);
-				int opcion;
+				int opcion = 0;
+
 				do {
 
-					opcion = r.nextInt(5);
+					if ((actual.getFila() == 0 || actual.getFila() == laberinto.length - 1)
+							|| (actual.getColumna() == 0 || actual.getColumna() == laberinto.length - 1)) {
+						opcion = controlarEsquinas();
+						stack.add(actual);
+					} else if ((actual.getFila() > 0 && actual.getFila() < laberinto.length - 1
+							&& actual.getColumna() == 0) // izquierda
+							|| (actual.getFila() == 0 && actual.getColumna() > 0
+									&& actual.getColumna() < laberinto.length - 1) // arriba
+							|| (actual.getColumna() == laberinto.length - 1 && actual.getFila() > 0
+									&& actual.getFila() < laberinto.length - 1) // derecha
+							|| (actual.getFila() == laberinto.length - 1 && actual.getColumna() > 0
+									&& actual.getColumna() < laberinto.length - 1)) { //abajo
+						opcion = controlarLados();
+						stack.add(actual);
+					} else {
 
-				} while (opcion < 1);
-				
-				do {
-				switch (opcion) {
-				
-				case 1:
-					actual=actual.irNorte(actual,laberinto);
-					stack.add(actual);
-					break;
+						switch (opcion) {
 
-				case 2:
-					actual=actual.irEste(actual,laberinto);
-					stack.add(actual);
-					break;
+						case 1:
+							actual = actual.irNorte(actual, laberinto);
+							stack.add(actual);
+							break;
 
-				case 3:
-					actual=actual.irSur(actual,laberinto);
-					stack.add(actual);
-					break;
+						case 2:
+							actual = actual.irEste(actual, laberinto);
+							stack.add(actual);
+							break;
 
-				case 4:
-					actual=actual.irOeste(actual,laberinto);
-					stack.add(actual);
-					break;
-				default:
+						case 3:
+							actual = actual.irSur(actual, laberinto);
+							stack.add(actual);
+							break;
 
-				}
-				}while(!actual.isVisitado());
-					
+						case 4:
+							actual = actual.irOeste(actual, laberinto);
+							stack.add(actual);
+							break;
+						default:
+
+						}
+					}
+				} while (!actual.isVisitado());
 
 			} catch (Exception e) {
 
 				e.printStackTrace();
 			}
-			
+
 			stack.clear();
 		} while (!laberintoCompleto(laberinto));
 	}
 
-	
+	public int controlarEsquinas() {
+
+		int opcion = 0;
+
+		if (actual.getFila() == 0 && actual.getColumna() == 0) { // esquina superior izquierda
+			do {
+				opcion = r.nextInt(5);
+
+			} while (opcion < 2 || opcion > 3);
+
+		} else if (actual.getFila() == laberinto.length - 1 && actual.getColumna() == 0) { // esquina inferior izquierda
+			do {
+				opcion = r.nextInt(5);
+
+			} while (opcion < 1 || opcion > 2);
+
+		} else if (actual.getFila() == 0 && actual.getColumna() == laberinto.length - 1) { // esquina superior derecha
+			do {
+				opcion = r.nextInt(5);
+
+			} while (opcion < 3 || opcion > 4);
+
+		} else if (actual.getFila() == laberinto.length - 1 && actual.getColumna() == laberinto.length - 1) { // esquina
+																												// inferior
+																												// derecha
+			do {
+				opcion = r.nextInt(5);
+
+			} while (opcion != 1 || opcion != 4);
+
+		}
+		return opcion;
+
+	}
+
+	public int controlarLados() {
+
+		int opcion = 0;
+
+		if (actual.getColumna() == 0) { // lado izquierdo
+			do {
+				opcion = r.nextInt(5);
+
+			} while (opcion == 4);
+
+		} else if (actual.getFila() == 0) { // lado superior
+			do {
+				opcion = r.nextInt(5);
+
+			} while (opcion == 1);
+
+		} else if (actual.getColumna() == laberinto.length - 1) { // lado derecho
+			do {
+				opcion = r.nextInt(5);
+
+			} while (opcion == 2);
+
+		} else if (actual.getFila() == laberinto.length - 1) { // lado inferior
+			do {
+				opcion = r.nextInt(5);
+
+			} while (opcion == 3);
+
+		}
+		return opcion;
+
+	}
 
 	public boolean laberintoCompleto(Celda[][] laberinto) {
 
