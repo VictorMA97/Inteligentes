@@ -3,15 +3,15 @@ package Laberinto;
 public class ContenidoFichero {
 	int row;
 	int cols;
-	int max_vecinos;
-	int[][] id_movimiento;
-	Celda celda;
-	boolean otroElementoNoEspecificado;
-	ContenidoFichero(int numFilas, int numColumnas, int max_vecinos2, int[][] id_movimiento2, Celda celda2){
-		otroElementoNoEspecificado = false;
+	
+	ContenidoFichero(int numFilas, int numColumnas, Celda celda2){
+		
 	}
-	Celda getCelda() {
-		return celda;
+	int getrow(){
+		return row;
+	}
+	int getcols(){
+		return cols;
 	}
 }
 
