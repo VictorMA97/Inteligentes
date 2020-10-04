@@ -2,7 +2,6 @@ package Laberinto;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -12,10 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.google.gson.*;
-import java.util.*;
 
 
 public class Gestor_Archivos {
@@ -31,7 +27,7 @@ public class Gestor_Archivos {
 				contenidoArchivo += linea;
 			}
 			ContenidoFichero elementos = gson.fromJson(contenidoArchivo, ContenidoFichero.class);
-			System.out.println(elementos.getrow()); //C:\Users\beatr\Documents\Laberinto_inteligentes\BC1_1\Inteligentes
+			System.out.println(elementos.getrow()); 
 			System.out.println(elementos.getcols());
 			contenidoArchivo = contenidoArchivo.replace(" ","");
 			String[] cells = (String[]) contenidoArchivo.split("cells");
@@ -67,9 +63,9 @@ public class Gestor_Archivos {
 		int anchura = 250;
 		int altura = 250;
 		//constructor de imagenes predefinidas
-		BufferedImage bufferedImage = new BufferedImage(anchura, altura, BufferedImage.TYPE_INT_RGB);
+		BufferedImage lienzo = new BufferedImage(anchura, altura, BufferedImage.TYPE_4BYTE_ABGR);
 		//creador de gráficos
-		Graphics2D g2d = bufferedImage.createGraphics();
+		Graphics2D g2d = lienzo.createGraphics();
 		
 		g2d.setColor(Color.white);
 		g2d.fillRect(0,0, anchura, altura);
@@ -78,5 +74,13 @@ public class Gestor_Archivos {
 		
 	}
 	//dibujo del tablero
-	
+	//para dibujar cada celda, posión muros de esa celda.
+	public static void dibujar() {
+		int anchura = 250;
+		int altura = 250;
+		BufferedImage lienzo = new BufferedImage(anchura,altura, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D pincel = lienzo.createGraphics();
+		pincel.setColor(Color.black);//todo lo que dibuje a partir de ahora se dibujara en negro a menos que indique otro color.
+		
+	}
 }
