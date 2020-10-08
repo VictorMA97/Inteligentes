@@ -6,7 +6,7 @@ public class Wilson {
 	private int columnas;
 	private int filas;
 	private Celda[][] laberinto;
-	private final Stack<Celda> stack = new Stack<Celda>();
+	private Stack<Celda> stack = new Stack<Celda>();
 	private Celda actual = new Celda(0, 0);
 	private final Random r = new Random();
 
@@ -29,7 +29,7 @@ public class Wilson {
 
 	public void algoritmoWilson() {
 		inicializar_laberinto();
-		
+		int contadorEnc=0;
 		int opcion;
 		do {
 			System.out.println("\nFila: " + actual.getFila() + " Columna: " + actual.getColumna());
@@ -47,6 +47,8 @@ public class Wilson {
 			boolean caminoEncontrado = false;
 			boolean inicio=true;
 			boolean recoloque=false;
+			
+			
 			
 			if(caminoEncontrado&&inicio) {
 				actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
@@ -82,6 +84,10 @@ public class Wilson {
 				if(existe(actual, stack, opcion, laberinto)) {
 					actual=recolocar(actual,laberinto,opcion);
 					recoloque=true;
+					if(recoloque) {
+						++contadorEnc;
+						
+					}
 				}else {
 				stack.add(actual);
 				}
@@ -93,6 +99,10 @@ public class Wilson {
 				if(existe(actual, stack, opcion, laberinto)) {
 					actual=recolocar(actual,laberinto,opcion);
 					recoloque=true;
+					if(recoloque) {
+						++contadorEnc;
+						
+					}
 					
 				}else {
 				stack.add(actual);
@@ -105,6 +115,10 @@ public class Wilson {
 				if(existe(actual, stack, opcion, laberinto)) {
 					actual=recolocar(actual,laberinto,opcion);
 					recoloque=true;
+					if(recoloque) {
+						++contadorEnc;
+						
+					}
 					
 				}else {
 				stack.add(actual);
@@ -117,6 +131,10 @@ public class Wilson {
 				if(existe(actual, stack, opcion, laberinto)) {
 					actual=recolocar(actual,laberinto,opcion);
 					recoloque=true;
+					if(recoloque) {
+						++contadorEnc;
+						
+					}
 				}else {
 				stack.add(actual);
 				}
@@ -131,6 +149,11 @@ public class Wilson {
 				actual.setVisitado(true);
 				if(recoloque) {
 					System.out.println("\nrecoloque\n");
+					if(contadorEnc==5) {
+						
+						contadorEnc=0;
+						stack=vaciarPila(stack);
+					}
 				}
 			}else{
 				System.out.println("\nprueba\n");
@@ -142,8 +165,24 @@ public class Wilson {
 				actual.setVisitado(true);
 				stack.add(actual);
 			}
+			
+			
 
 		} while (!laberintoCompleto(laberinto));
+	}
+
+	private Stack<Celda> vaciarPila(Stack<Celda> pila) {
+		Celda aux;
+		
+		while(!pila.isEmpty()){
+			
+			aux=stack.pop();
+			aux.setVisitado(false);
+			
+			
+		}
+		return pila;
+	
 	}
 
 	public boolean existe(Celda actual, Stack<Celda> camino, int opcion, Celda[][] lab) {
