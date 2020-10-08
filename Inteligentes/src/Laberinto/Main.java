@@ -1,4 +1,5 @@
-package laberinto;
+package Laberinto;
+
 
 import java.util.Scanner;
 
@@ -26,9 +27,11 @@ public class Main {
                 switch (option) {
                     case 1:
                         pedir_datos();
-                        Wilson w = new Wilson();
+                        Wilson w = new Wilson(laberinto.length,laberinto.length);
+                        w.algoritmoWilson();
+                        System.out.println("funciona");
                         laberinto = w.getLaberinto();
-                        Gestor_Archivos.dibujarPNG();//Dibujamos
+                        //Gestor_Archivos.dibujarPNG();//Dibujamos
                         bucle=false;
                         break;
                     case 2:
@@ -65,7 +68,9 @@ public class Main {
                 error = true;
             }
         } while (error);
+        System.out.println(fila+" "+columna);
         laberinto = new Celda[fila][columna];
+   
 
     }
 
