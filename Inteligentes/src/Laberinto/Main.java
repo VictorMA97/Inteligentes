@@ -1,3 +1,4 @@
+package Laberinto;
 
 
 import java.util.Scanner;
@@ -25,7 +26,7 @@ public class Main {
                 option = teclado.nextInt();
                 switch (option) {
                     case 1:
-                        laberinto=pedir_datos();
+                        pedir_datos();
                         Wilson w = new Wilson(laberinto.length,laberinto.length);
                         w.algoritmoWilson();
                         System.out.println("funciona");
@@ -52,7 +53,7 @@ public class Main {
         } while (bucle);
     }
 
-    private static Celda[][] pedir_datos() {
+    private static void pedir_datos() {
         Scanner teclado = new Scanner(System.in);
         boolean error = false;
         do {
@@ -69,7 +70,7 @@ public class Main {
         } while (error);
         System.out.println(fila+" "+columna);
         laberinto = new Celda[fila][columna];
-        return laberinto;
+   
 
     }
 
