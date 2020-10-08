@@ -1,4 +1,4 @@
-
+package Laberintos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,13 +7,10 @@ import java.util.Random;
 
 public class Celda {
 	
-	private int id, fila, columna;
-	
-	private Celda pariente;
+	private int fila, columna;
 	
 	private boolean visitado;
 	private boolean camino;
-	private boolean fin;
 	
 	private boolean [] muros= {false,false,false,false};
 	
@@ -29,12 +26,6 @@ public class Celda {
 	}
 	public void setVisitado(boolean visitado) {
 		this.visitado = visitado;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public int getColumna() {
@@ -61,28 +52,12 @@ public class Celda {
 		this.camino = camino;
 	}
 
-	public boolean isFin() {
-		return fin;
-	}
-
-	public void setFin(boolean fin) {
-		this.fin = fin;
-	}
-
 	public boolean[] getMuros() {
 		return muros;
 	}
 
 	public void setMuros(boolean [] muros) {
 		this.muros = muros;
-	}
-
-	public Celda getPariente() {
-		return pariente;
-	}
-
-	public void setPariente(Celda pariente) {
-		this.pariente = pariente;
 	}
 	
 	public void eliminarMuro (Celda c) {
