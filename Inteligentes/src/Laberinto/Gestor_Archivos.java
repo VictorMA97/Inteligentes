@@ -27,15 +27,11 @@ public class Gestor_Archivos {
 				contenidoArchivo += linea;
 			}
 			ContenidoFichero elementos = gson.fromJson(contenidoArchivo, ContenidoFichero.class);
-			System.out.println(elementos.getrow()); 
-			System.out.println(elementos.getcols());
-			contenidoArchivo = contenidoArchivo.replace(" ","");
-			String[] cells = (String[]) contenidoArchivo.split("cells");
-			String cont = cells[1];
-			String [] datos = cont.split("\t");
-			for(int i=1;i<datos.length-1;i++) {
-				System.out.println(datos[i]);
-			}
+			System.out.println(elementos.row); 
+			System.out.println(elementos.cols);
+			System.out.println(elementos.max_vecinos);
+			System.out.println(elementos.id_movimiento);
+			System.out.println(elementos.celda);
 			
 		}catch(FileNotFoundException ex) {
 			System.out.println("No se ha encontrado el archivo");
@@ -80,7 +76,21 @@ public class Gestor_Archivos {
 		int altura = 250;
 		BufferedImage lienzo = new BufferedImage(anchura,altura, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D pincel = lienzo.createGraphics();
-		pincel.setColor(Color.black);//todo lo que dibuje a partir de ahora se dibujara en negro a menos que indique otro color.
+		pincel.setColor(Color.WHITE);//todo lo que dibuje a partir de ahora se dibujara en negro a menos que indique otro color.
+		pincel.fillRect(0, 0, anchura-1, altura-1);
+		pincel.setColor(Color.BLACK);
+		pincel.drawLine(0, 0, anchura-1, altura-1);
 		
+		/*for(int i = 0; i < laberinto.length; i++) {
+			for(int j = 0; j < laberinto.length; i++) {
+				muros = laberinto[i][j].getMuros();
+				for(int k = 0; k < muros.length; k++) {
+					if(muros[k] == false) {
+						pincel.drawLine();//origenx, origeny, destino
+						pincel.drawLine(0, 0, anchura-1, altura-1);
+					}
+				}
+			}
+		}*/		
 	}
 }
