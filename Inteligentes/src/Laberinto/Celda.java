@@ -1,4 +1,4 @@
-package Laberintos;
+package laberintos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,12 +7,15 @@ import java.util.Random;
 
 public class Celda {
 	
-	private int fila, columna;
+	private int id, fila, columna;
+	
+	private Celda pariente;
 	
 	private boolean visitado;
 	private boolean camino;
+	private boolean fin;
 	
-	private boolean [] muros= {false,false,false,false};
+	private boolean [] muros= {true,true,true,true};
 	
 	public Celda(int x, int y) {
 		visitado=false;
@@ -26,6 +29,12 @@ public class Celda {
 	}
 	public void setVisitado(boolean visitado) {
 		this.visitado = visitado;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getColumna() {
@@ -52,6 +61,14 @@ public class Celda {
 		this.camino = camino;
 	}
 
+	public boolean isFin() {
+		return fin;
+	}
+
+	public void setFin(boolean fin) {
+		this.fin = fin;
+	}
+
 	public boolean[] getMuros() {
 		return muros;
 	}
@@ -59,69 +76,16 @@ public class Celda {
 	public void setMuros(boolean [] muros) {
 		this.muros = muros;
 	}
-	
-	public void eliminarMuro (Celda c) {
-		int x= fila-c.getFila(); //0=N, 1=E, 2=S, 3=O
-		
-		if(x == 1) {
-			muros[3] = false;
-			c.muros[1] = false;
-		} else if (x == -1) {
-			muros[1] = false;
-			c.muros[3] = false;
-		}
-		
-		int y = this.columna - c.getColumna();
-		
-		if(y == 1) {
-			muros[0] = false;
-			c.muros[2] = false;
-		} else if (y == -1) {
-			muros[2] = false;
-			c.muros[0] = false;
-		}
-	}
-	
-	private Celda vecinoAleatorio (List<Celda> vecinos) {
-		if (vecinos.size() > 0) {
-			return vecinos.get(new Random().nextInt(vecinos.size()));
-		} else {
-			return null;
-		}
-	}
-	
-	private Celda validarVecino (Celda[][] l, Celda vecino) {
-            Celda aux = null;
-            for(int i=0;i<l.length;i++){
-                for(int j=0;j<l[i].length;j++){
-                    if(l[i][j].equals(vecino)){
-                        aux= l[i][j];
-                    }
-                }
-            }
-            return aux;
-        }
-	
-	// Used for Wilson's algorithm
-	public Celda getNonPathNeighbour(Celda[][] lab) {
 
-		List<Celda> vecinos = new ArrayList<>(4);
-		
-		Celda top = validarVecino(lab, new Celda(fila, columna - 1));
-		Celda right = validarVecino(lab, new Celda(fila + 1, columna));
-		Celda bottom = validarVecino(lab, new Celda(fila, columna + 1));
-		Celda left = validarVecino(lab, new Celda(fila - 1, columna));
-		
-		if (top != null) if(!top.camino) vecinos.add(top);
-		if (right != null) if(!right.camino) vecinos.add(right);
-		if (bottom != null) if(!bottom.camino) vecinos.add(bottom);
-		if (left != null) if(!left.camino) vecinos.add(left);
-		
-		if (vecinos.size() ==  1) {
-			return vecinos.get(0);
-		}
-		return vecinoAleatorio(vecinos);
+	public Celda getPariente() {
+		return pariente;
 	}
+
+	public void setPariente(Celda pariente) {
+		this.pariente = pariente;
+	}
+	
+	
         public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -137,13 +101,27 @@ public class Celda {
 		return true;
 	}
 
-		@Override
-		public String toString() {
-			return "(" + fila + ", " + columna + ") { vecinos: " +  Arrays.toString(muros) + "}";
-					
-		}
-
+		
+		
 		public Celda irNorte(Celda actual , Celda[][] lab) {
+			Random r=new Random();
+			int muro=0;
+			boolean[] muros=actual.getMuros();
+			for(int i = 0; i<4; i++) {
+				if (i==0) {
+					muros[i]=false;
+				}else {
+					muro=r.nextInt(2);
+					switch(muro) {
+					case 0:
+						muros[i]=false;
+						break;
+					case 1:
+						muros[i]=true;
+						break;
+					}
+				}
+			}
 			int fila, columna;
 			fila=actual.getFila();
 			columna=actual.getColumna();
@@ -153,6 +131,24 @@ public class Celda {
 		}
 
 		public Celda irEste(Celda actual, Celda[][] lab) {
+			Random r=new Random();
+			int muro=0;
+			boolean[] muros=actual.getMuros();
+			for(int i = 0; i<4; i++) {
+				if (i==1) {
+					muros[i]=false;
+				}else {
+					muro=r.nextInt(2);
+					switch(muro) {
+					case 0:
+						muros[i]=false;
+						break;
+					case 1:
+						muros[i]=true;
+						break;
+					}
+				}
+			}
 			int fila, columna;
 			fila=actual.getFila();
 			columna=actual.getColumna();
@@ -163,6 +159,24 @@ public class Celda {
 		}
 
 		public Celda irSur(Celda actual, Celda[][] lab) {
+			Random r=new Random();
+			int muro=0;
+			boolean[] muros=actual.getMuros();
+			for(int i = 0; i<4; i++) {
+				if (i==2) {
+					muros[i]=false;
+				}else {
+					muro=r.nextInt(2);
+					switch(muro) {
+					case 0:
+						muros[i]=false;
+						break;
+					case 1:
+						muros[i]=true;
+						break;
+					}
+				}
+			}
 			int fila, columna;
 			fila=actual.getFila();
 			columna=actual.getColumna();
@@ -173,6 +187,24 @@ public class Celda {
 		}
 
 		public Celda irOeste(Celda actual, Celda[][] lab) {
+			Random r=new Random();
+			int muro=0;
+			boolean[] muros=actual.getMuros();
+			for(int i = 0; i<4; i++) {
+				if (i==3) {
+					muros[i]=false;
+				}else {
+					muro=r.nextInt(2);
+					switch(muro) {
+					case 0:
+						muros[i]=false;
+						break;
+					case 1:
+						muros[i]=true;
+						break;
+					}
+				}
+			}
 			int fila, columna;
 			fila=actual.getFila();
 			columna=actual.getColumna();
@@ -182,6 +214,10 @@ public class Celda {
 			
 		}
       
-    
+		@Override
+		public String toString() {
+			return "(" + fila + ", " + columna + ") { vecinos: " +  Arrays.toString(muros) + "}";
+					
+		}
         
 }
