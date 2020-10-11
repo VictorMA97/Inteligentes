@@ -1,4 +1,4 @@
-package laberintos;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
