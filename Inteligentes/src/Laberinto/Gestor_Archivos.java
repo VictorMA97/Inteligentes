@@ -20,25 +20,49 @@ public class Gestor_Archivos {
 		
 		Gson gson = new Gson();
 		String contenidoArchivo = "";
-		
 		try(BufferedReader br = new BufferedReader(new FileReader(ruta))){
 			String linea;
 			while((linea = br.readLine()) != null) {
-				contenidoArchivo += linea;
+				contenidoArchivo += linea;	
 			}
-			ContenidoFichero elementos = gson.fromJson(contenidoArchivo, ContenidoFichero.class);
-			System.out.println(elementos.row); 
-			System.out.println(elementos.cols);
-			System.out.println(elementos.max_vecinos);
-			System.out.println(elementos.id_movimiento);
-			System.out.println(elementos.celda);
-			
+			JsonElement elemento = new JsonParser().parse(contenidoArchivo);
+			JsonObject obj = elemento.getAsJsonObject();
+			JsonPrimitive rows = obj.getAsJsonPrimitive("row");
+			JsonPrimitive cols = obj.getAsJsonPrimitive("cols");
+			int row = Integer.parseInt(rows.toString());
+			int col = Integer.parseInt(cols.toString());
+			JsonArray vecinos;
+			//C:\Users\beatr\Documents\Laberinto_inteligentes\BC1_1\Inteligentes
+			obj = obj.getAsJsonObject("cells");
+			try {
+				for(int x = 0; x <= row; x++) {
+					for(int y = 0; y <= col; y++) {
+						Celda celda = new Celda(x,y);
+						vecinos = obj.getAsJsonObject("("+String.valueOf(x)+","+String.valueOf(y)+")").getAsJsonArray("neighbors");
+						
+						//Los vecinos son de cada celda
+						
+						//Lo que esta a continuación, lo pongo para poder sacar los elementos del array vecinos y poder despues haecr un celda.setMuro(boolean[] muros);
+						/*Boolean[] muros = new Boolean[vecinos.size()];
+						for(int k =0; k< vecinos.size();k++) {
+							elemento = vecinos.getAsJsonArray();
+							if(elemento.getAsString() == "false" ) {
+								muros[k] = Boolean.parseBoolean(elemento.getAsString());
+							}else {
+								muros[k] = Boolean.parseBoolean(elemento.getAsString());
+							}
+						}
+						System.out.print(muros);*/
+					}
+				}
+			}catch(NullPointerException e) {
+				System.out.print("");
+			}
 		}catch(FileNotFoundException ex) {
 			System.out.println("No se ha encontrado el archivo");
 		}catch(IOException ex) {
 			System.out.println("No se ha podido abrir el archivo");
 		}
-		
 	}
 	/*Escritura del json, para la escritura no necesito la celda en si, es mas cada celda del resultado*/
 	public static void escribirArchivoJson(String ruta, int numFilas, int numColumnas, Celda celda) {
