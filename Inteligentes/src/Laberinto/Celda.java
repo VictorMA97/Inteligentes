@@ -109,7 +109,7 @@ public class Celda {
 			boolean[] muros=actual.getMuros();
 			for(int i = 0; i<4; i++) {
 				if (i==0) {
-					muros[i]=false;
+					muros[i]=true;
 				}else {
 					muro=r.nextInt(2);
 					switch(muro) {
@@ -136,7 +136,7 @@ public class Celda {
 			boolean[] muros=actual.getMuros();
 			for(int i = 0; i<4; i++) {
 				if (i==1) {
-					muros[i]=false;
+					muros[i]=true;
 				}else {
 					muro=r.nextInt(2);
 					switch(muro) {
@@ -164,7 +164,7 @@ public class Celda {
 			boolean[] muros=actual.getMuros();
 			for(int i = 0; i<4; i++) {
 				if (i==2) {
-					muros[i]=false;
+					muros[i]=true;
 				}else {
 					muro=r.nextInt(2);
 					switch(muro) {
@@ -192,7 +192,7 @@ public class Celda {
 			boolean[] muros=actual.getMuros();
 			for(int i = 0; i<4; i++) {
 				if (i==3) {
-					muros[i]=false;
+					muros[i]=true;
 				}else {
 					muro=r.nextInt(2);
 					switch(muro) {
