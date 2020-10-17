@@ -144,13 +144,22 @@ public class Celda {
 		int muro = 0;
 		int paredes = 0;
 		boolean[] muros = actual.getMuros();
-
+	boolean seguir=true;
+		
+		for(int i = 0; i < 4;i++) {
+			if(muros[i]==false) {
+				seguir=false;
+			}
+		}
+		
+		if(seguir) {
 		for (int i = 0; i < 4; i++) {
 
 			muro = r.nextInt(2);
 			if (paredes == 1) {
 				break;
 			}
+
 			switch (muro) {
 			case 0:
 				muros[i] = false;
@@ -165,6 +174,7 @@ public class Celda {
 				}
 			}
 
+		}
 		}
 
 		muros[0] = true;
@@ -182,7 +192,15 @@ public class Celda {
 		int muro = 0;
 		int paredes = 0;
 		boolean[] muros = actual.getMuros();
-
+		boolean seguir=true;
+		
+		for(int i = 0; i < 4;i++) {
+			if(muros[i]==false) {
+				seguir=false;
+			}
+		}
+		
+		if(seguir) {
 		for (int i = 0; i < 4; i++) {
 
 			muro = r.nextInt(2);
@@ -205,9 +223,10 @@ public class Celda {
 			}
 
 		}
-
+		}
 		muros[1] = true;
 		completar(actual, lab);
+		
 		int fila, columna;
 		fila = actual.getFila();
 		columna = actual.getColumna();
@@ -222,13 +241,22 @@ public class Celda {
 		int muro = 0;
 		int paredes = 0;
 		boolean[] muros = actual.getMuros();
-
+	boolean seguir=true;
+		
+		for(int i = 0; i < 4;i++) {
+			if(muros[i]==false) {
+				seguir=false;
+			}
+		}
+		
+		if(seguir) {
 		for (int i = 0; i < 4; i++) {
 
 			muro = r.nextInt(2);
 			if (paredes == 1) {
 				break;
 			}
+
 			switch (muro) {
 			case 0:
 				muros[i] = false;
@@ -243,6 +271,7 @@ public class Celda {
 				}
 			}
 
+		}
 		}
 
 		muros[2] = true;
@@ -262,12 +291,22 @@ public class Celda {
 		int paredes = 0;
 		boolean[] muros = actual.getMuros();
 
+	boolean seguir=true;
+		
+		for(int i = 0; i < 4;i++) {
+			if(muros[i]==false) {
+				seguir=false;
+			}
+		}
+		
+		if(seguir) {
 		for (int i = 0; i < 4; i++) {
 
 			muro = r.nextInt(2);
 			if (paredes == 1) {
 				break;
 			}
+
 			switch (muro) {
 			case 0:
 				muros[i] = false;
@@ -282,6 +321,7 @@ public class Celda {
 				}
 			}
 
+		}
 		}
 
 		muros[3] = true;
