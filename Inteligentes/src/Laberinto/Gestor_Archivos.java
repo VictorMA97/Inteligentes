@@ -66,14 +66,14 @@ public class Gestor_Archivos {
     public static void escribirArchivoJson(String ruta) {
         Gson gson = new Gson(); //no s� si los parametros habr�a que pasarlos a string, o sea hacer la conversi�n
         ruta += "\\Resultado.json";
-        Celda cells;
-        //ContenidoFichero fichero = new ContenidoFichero(cells.getFila(),cells.getColumna(),4);
-        //String json = gson.toJson(fichero);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ruta))) {
-            //bw.write(json);
-            System.out.println("Fichero creado, mire el explorador de archivos. En la ruta: " + ruta);
-        } catch (IOException ex) {
-            System.out.println("Problema en la introducci�n de la ruta para escribir el fichero.");
+        Celda[][] laberinto = Main.getLaberinto();
+        try {
+        	FileWriter archivo = new FileWriter(ruta);
+        	archivo.write(gson.toJson(laberinto));
+        	archivo.flush();
+        	archivo.close();
+        }catch(IOException e) {
+        	System.out.println("Error al escribir json");
         }
     }
 }
