@@ -6,8 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 public class Main {
@@ -35,7 +33,7 @@ public class Main {
                 option = teclado.nextInt();
                 switch (option) {
                     case 1:
-                    	String ruta = pedir_direccion();
+                    	String ruta = ruta_json();
                         pedir_datos();
                         Wilson w = new Wilson(laberinto.length,laberinto[0].length);
                         w.algoritmoWilson();
@@ -43,7 +41,6 @@ public class Main {
                         laberinto = w.getLaberinto();
                         dibujar();
                         Gestor_Archivos.escribirArchivoJson(ruta);
-                        //ga.escribirArchivoJson(rut, fila, columna, celda);
                         bucle=false;
                         break;
                     case 2:
@@ -67,24 +64,6 @@ public class Main {
             }
         } while (bucle);
     }
-
-    private static String pedir_direccion() {
-    	Scanner teclado = new Scanner(System.in);
-        boolean error = false;
-        String ruta = "";
-        do {
-            try {
-                System.out.println("Introduce la carpeta donde guardar el json:");
-                ruta = teclado.nextLine();
-
-            } catch (Exception e) {
-                System.out.println("Error al leer la ruta.");
-                error = true;
-            }
-        } while (error);
-
-        return ruta;
-	}
 	
     private void pedir_datos() {
         Scanner teclado = new Scanner(System.in);
