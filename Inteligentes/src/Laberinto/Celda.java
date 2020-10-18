@@ -1,7 +1,6 @@
 package Laberintos;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public class Celda {
 
@@ -9,7 +8,7 @@ public class Celda {
 
     private boolean visitado;
 
-    private boolean[] muros = {false, false, false, false};
+    private boolean[] vecinos = {false, false, false, false};
 
     public Celda(int x, int y) {
         visitado = false;
@@ -42,12 +41,12 @@ public class Celda {
         this.fila = fila;
     }
 
-    public boolean[] getMuros() {
-        return muros;
+    public boolean[] getVecinos() {
+        return vecinos;
     }
 
-    public void setMuros(boolean[] muros) {
-        this.muros = muros;
+    public void setVecinos(boolean[] vecinos) {
+        this.vecinos = vecinos;
     }
 
     public boolean equals(Object obj) {
@@ -70,32 +69,9 @@ public class Celda {
         return true;
     }
 
-    public Celda irNorte(Celda[][] lab) {
-        muros[0] = true;
-        return lab[fila - 1][columna];
-    }
-
-    public Celda irEste(Celda[][] lab) {
-        muros[1] = true;
-        return lab[fila][columna + 1];
-
-    }
-
-    public Celda irSur(Celda[][] lab) {
-        muros[2] = true;
-        return lab[fila + 1][columna];
-
-    }
-
-    public Celda irOeste(Celda[][] lab) {
-        muros[3] = true;
-        return lab[fila][columna - 1];
-
-    }
-
     @Override
     public String toString() {
-        return "(" + fila + ", " + columna + ") { vecinos: " + Arrays.toString(muros) + "}";
+        return "(" + fila + ", " + columna + ") { vecinos: " + Arrays.toString(vecinos) + "}";
 
     }
 

@@ -60,12 +60,12 @@ public class Wilson {
                         vecino = laberinto[filaActual - 1][columnaActual];
                         mov++;
                         if (!visitados.contains(vecino)) {
-                            boolean aux[] = actual.getMuros();
+                            boolean aux[] = actual.getVecinos();
                             aux[0] = true;
-                            actual.setMuros(aux);
-                            boolean aux2[] = vecino.getMuros();
+                            actual.setVecinos(aux);
+                            boolean aux2[] = vecino.getVecinos();
                             aux2[2] = true;
-                            vecino.setMuros(aux2);
+                            vecino.setVecinos(aux2);
                             porVisitar.add(0,vecino); //agregamos el vecino elegido a la lista de nodos por visitar      
                         }
 
@@ -75,12 +75,12 @@ public class Wilson {
                         vecino = laberinto[filaActual][columnaActual + 1];
                         mov++;
                         if (!visitados.contains(vecino)) {
-                            boolean aux[] = actual.getMuros();
+                            boolean aux[] = actual.getVecinos();
                             aux[1] = true;
-                            actual.setMuros(aux);
-                            boolean aux2[] = vecino.getMuros();
+                            actual.setVecinos(aux);
+                            boolean aux2[] = vecino.getVecinos();
                             aux2[3] = true;
-                            vecino.setMuros(aux2);
+                            vecino.setVecinos(aux2);
                             porVisitar.add(0,vecino);
                         }
                         break;
@@ -89,12 +89,12 @@ public class Wilson {
                         vecino = laberinto[filaActual + 1][columnaActual];
                         mov++;
                         if (!visitados.contains(vecino)) {
-                            boolean aux[] = actual.getMuros();
+                            boolean aux[] = actual.getVecinos();
                             aux[2] = true;
-                            actual.setMuros(aux);
-                            boolean aux2[] = vecino.getMuros();
+                            actual.setVecinos(aux);
+                            boolean aux2[] = vecino.getVecinos();
                             aux2[0] = true;
-                            vecino.setMuros(aux2);
+                            vecino.setVecinos(aux2);
                             porVisitar.add(0,vecino);
                         }
                         break;
@@ -103,12 +103,12 @@ public class Wilson {
                         vecino = laberinto[filaActual][columnaActual - 1];
                         mov++;
                         if (!visitados.contains(vecino)) {
-                            boolean aux[] = actual.getMuros();
+                            boolean aux[] = actual.getVecinos();
                             aux[3] = true;
-                            actual.setMuros(aux);
-                            boolean aux2[] = vecino.getMuros();
+                            actual.setVecinos(aux);
+                            boolean aux2[] = vecino.getVecinos();
                             aux2[1] = true;
-                            vecino.setMuros(aux2);
+                            vecino.setVecinos(aux2);
                             porVisitar.add(0,vecino);
                         }
                         break;
