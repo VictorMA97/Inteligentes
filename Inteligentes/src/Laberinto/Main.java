@@ -38,9 +38,10 @@ public class Main {
                         Wilson w = new Wilson(laberinto.length,laberinto[0].length);
                         w.generar();
                         System.out.println("funciona");
+                        System.arraycopy(w.getLaberinto(), 0, laberinto, 0, laberinto.length);
                         laberinto = w.getLaberinto();
                         dibujar();
-                        Gestor_Archivos.escribirArchivoJson(ruta);
+                        ga.escribirArchivoJson(ruta, laberinto);
                         bucle=false;
                         break;
                     case 2:
