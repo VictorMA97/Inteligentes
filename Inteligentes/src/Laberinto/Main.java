@@ -36,7 +36,7 @@ public class Main {
                     	String ruta = ruta_json();
                         pedir_datos();
                         Wilson w = new Wilson(laberinto.length,laberinto[0].length);
-                        w.algoritmoWilson();
+                        w.generar();
                         System.out.println("funciona");
                         laberinto = w.getLaberinto();
                         dibujar();
@@ -135,14 +135,14 @@ public class Main {
             // drawLine(posicion_actualx, posicion_actualy, posicion_destinox, posicion_destinoy)
             for(int i=0; i<laberinto.length; i++){
                 for(int j=0; j<laberinto[0].length; j++){
-                    System.out.println(laberinto[0].length-1);
+                    System.out.println(laberinto[0].length);
                     System.out.println();
                     boolean []c = laberinto[i][j].getMuros();
                     
                     int fila = tamaño_celda*i;
                     int columna = tamaño_celda * j;
+                    System.out.println(c[0]);
                     if(c[0] == false){
-                        
                         g.drawLine(columna, fila, columna + tamaño_celda, fila); //dibujar norte
                         //fila+=10;
                     }

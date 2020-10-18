@@ -1,410 +1,165 @@
+package Laberintos;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Wilson {
-	
-	private int columnas;
-	private int filas;
-	private Celda[][] laberinto;
-	private Stack<Celda> stack = new Stack<Celda>();
-	private Celda actual = new Celda(0, 0);
-	private final Random r = new Random();
 
-	public Wilson(int filas, int columnas) {
-		this.filas=filas;
-		this.columnas=columnas;
-	}
-	
-	public Celda[][] inicializar_laberinto() {
-		
-	    
-		laberinto = new Celda[filas][columnas];
-		for (int i = 0; i < laberinto.length; i++)
-			for (int j = 0; j < laberinto[i].length; j++) {
-				laberinto[i][j] = new Celda(i, j);
-			}
-		return laberinto;
-	}
-	
+    private int filas;
+    private int columnas;
 
-	public void algoritmoWilson() {
-		inicializar_laberinto();
-		int contadorEnc=0;
-		int opcion;
-		do {
-			System.out.println("\nFila: " + actual.getFila() + " Columna: " + actual.getColumna());
-			laberinto[0][0].setVisitado(true);
-			for(int i = 0 ; i<laberinto.length;i++) {
-				System.out.println();
-				for(int j = 0 ; j <laberinto.length;j++) {
-					
-					System.out.print(laberinto[i][j].isVisitado()+" ");
-				}
-				
-				
-			}
+    private Celda[][] laberinto;
 
-			boolean caminoEncontrado = false;
-			boolean inicio=true;
-			boolean recoloque=false;
-			
-			
-			
-			if(caminoEncontrado&&inicio) {
-				actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
-				actual.setVisitado(true);
-				stack.add(actual);
-				inicio=false;
-			}
+    public Wilson(int filas, int columnas) {
+        this.filas = filas;
+        this.columnas = columnas;
+        init();
+    }
 
-			opcion = 0;
+    /**
+     * Inicializa el arreglo que mantiene las casillas del laberinto
+     */
+    public final void init() {
+        this.laberinto = new Celda[filas][columnas];
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                laberinto[i][j] = new Celda(i, j);
+            }
+        }
+    }
+    
+    public void generar() {
 
-		
+        //Conjuntos usados en el algoritmo de generacion
+        List<Celda> visitados = new ArrayList<Celda>();
+        List<Celda> porVisitar = new ArrayList<Celda>();
+        Random r = new Random();
 
-			if ((actual.getFila() == 0 || actual.getFila() == laberinto.length - 1)
-					|| (actual.getColumna() == 0 || actual.getColumna() == laberinto.length - 1)) {
-				opcion = controlarEsquinas();
-				
-				System.out.println("hola opcion: " + opcion);
-				System.out.println("\nFila: " + actual.getFila() + " Columna: " + actual.getColumna());
+        Celda fin = laberinto[r.nextInt(filas - 1)][r.nextInt(columnas - 1)];
+        porVisitar.add(fin);
 
-			} else {
+        int filaActual = 0, columnaActual = 0;
+        Celda vecino = null;
 
-				do {
-					opcion = r.nextInt(5);
-				} while (opcion < 1);
-				System.out.println("hola2 opcion: " + opcion);
+        //Mientras queden nodos por visitar en la pila seguimos el recorrido
+        while (porVisitar.size() != 0) {
+            Celda actual = porVisitar.get(0); //Obtenemos la primera casilla de la pila para empezar el recorrido
+            visitados.add(actual); //marcamos la casilla actual como visitada
 
-			}
-			System.out.println("opciondespues: " + opcion);
-			switch (opcion) {
+            //int numero=actual.getNumero();
+            filaActual = actual.getFila();
+            columnaActual = actual.getColumna();
 
-			case 1:
-				actual = actual.irNorte(actual, laberinto);
-				if(existe(actual, stack, opcion, laberinto)) {
-					actual=recolocar(actual,laberinto,opcion);
-					recoloque=true;
-					if(recoloque) {
-						++contadorEnc;
-						
-					}
-				}else {
-				stack.add(actual);
-				}
-				System.out.println(stack);
-				break;
+            vecino = actual;
+            int mov=0;
+            while (visitados.contains(vecino) && mov <=4) {
+                int opcion = elegirOpcion(filaActual, columnaActual); //obtenemos la direccion del primer vecino de la casilla actual
+                switch (opcion) {
+                    case 0: //norte
+                        vecino = laberinto[filaActual - 1][columnaActual];
+                        mov++;
+                        if (!visitados.contains(vecino)) {
+                            boolean aux[] = actual.getMuros();
+                            aux[0] = true;
+                            actual.setMuros(aux);
+                            boolean aux2[] = vecino.getMuros();
+                            aux2[2] = true;
+                            vecino.setMuros(aux2);
+                            porVisitar.add(0,vecino); //agregamos el vecino elegido a la lista de nodos por visitar      
+                        }
 
-			case 2:
-				actual = actual.irEste(actual, laberinto);
-				if(existe(actual, stack, opcion, laberinto)) {
-					actual=recolocar(actual,laberinto,opcion);
-					recoloque=true;
-					if(recoloque) {
-						++contadorEnc;
-						
-					}
-					
-				}else {
-				stack.add(actual);
-				}
-				System.out.println(stack);
-				break;
+                        break;
 
-			case 3:
-				actual = actual.irSur(actual, laberinto);
-				if(existe(actual, stack, opcion, laberinto)) {
-					actual=recolocar(actual,laberinto,opcion);
-					recoloque=true;
-					if(recoloque) {
-						++contadorEnc;
-						
-					}
-					
-				}else {
-				stack.add(actual);
-				}
-				System.out.println(stack);
-				break;
+                    case 1: //este
+                        vecino = laberinto[filaActual][columnaActual + 1];
+                        mov++;
+                        if (!visitados.contains(vecino)) {
+                            boolean aux[] = actual.getMuros();
+                            aux[1] = true;
+                            actual.setMuros(aux);
+                            boolean aux2[] = vecino.getMuros();
+                            aux2[3] = true;
+                            vecino.setMuros(aux2);
+                            porVisitar.add(0,vecino);
+                        }
+                        break;
 
-			case 4:
-				actual = actual.irOeste(actual, laberinto);
-				if(existe(actual, stack, opcion, laberinto)) {
-					actual=recolocar(actual,laberinto,opcion);
-					recoloque=true;
-					if(recoloque) {
-						++contadorEnc;
-						
-					}
-				}else {
-				stack.add(actual);
-				}
-				System.out.println(stack);
-				break;
-			default:
-				break;
+                    case 2: //sur
+                        vecino = laberinto[filaActual + 1][columnaActual];
+                        mov++;
+                        if (!visitados.contains(vecino)) {
+                            boolean aux[] = actual.getMuros();
+                            aux[2] = true;
+                            actual.setMuros(aux);
+                            boolean aux2[] = vecino.getMuros();
+                            aux2[0] = true;
+                            vecino.setMuros(aux2);
+                            porVisitar.add(0,vecino);
+                        }
+                        break;
 
-			}
+                    case 3: //oeste
+                        vecino = laberinto[filaActual][columnaActual - 1];
+                        mov++;
+                        if (!visitados.contains(vecino)) {
+                            boolean aux[] = actual.getMuros();
+                            aux[3] = true;
+                            actual.setMuros(aux);
+                            boolean aux2[] = vecino.getMuros();
+                            aux2[1] = true;
+                            vecino.setMuros(aux2);
+                            porVisitar.add(0,vecino);
+                        }
+                        break;
 
-			if (actual.isVisitado() == false||recoloque) {
-				actual.setVisitado(true);
-				if(recoloque) {
-					System.out.println("\nrecoloque\n");
-					if(contadorEnc==5) {
-						
-						contadorEnc=0;
-						stack=vaciarPila(stack);
-					}
-				}
-			}else{
-				System.out.println("\nprueba\n");
-				caminoEncontrado = true;
-				stack.clear();
-				do {
-				actual = laberinto[r.nextInt(filas)][r.nextInt(columnas)];
-				}while(actual.isVisitado());
-				actual.setVisitado(true);
-				stack.add(actual);
-			}
-			
-			
-
-		} while (!laberintoCompleto(laberinto));
-		limpiarDibujo(laberinto);
-		dibujarCuadro(laberinto);
-		prueba(laberinto);
-	}
-	
-	public void limpiarDibujo(Celda[][] lab) {
-		boolean[] muros;
-		boolean cuadroEntero=true;
-		for(int i = 0; i<lab.length;i++) {
-			for(int j=0; j<lab.length;j++) {
-				cuadroEntero=true;
-				muros=lab[i][j].getMuros();
-				for (int a = 0;a<muros.length;a++) {
-					if(muros[a]==true) {
-						cuadroEntero=false;
-					}
-					
-				}
-				if(cuadroEntero) {
-					muros=borrarMuro(muros);
-				}
-				
-			}
+                }
+                if(mov==4){ 
+                    porVisitar.remove(actual);
 		}
-	}
-	
-	public boolean[] borrarMuro(boolean[] muros) {
-		
-		Random r = new Random();
-		int muro=r.nextInt(muros.length);
-		muros[muro]=true;
-		return muros;
-		
-	}
-	
-	public void dibujarCuadro(Celda[][] lab) {
-		boolean[] muros;
-		muros=lab[0][0].getMuros();
-		muros[0]=false;
-		muros[3]=false;
-		muros=lab[0][lab.length-1].getMuros();
-		muros[0]=false;
-		muros[1]=false;
-		muros=lab[lab.length-1][0].getMuros();
-		muros[2]=false;
-		muros[3]=false;
-		muros=lab[lab.length-1][lab.length-1].getMuros();
-		muros[1]=false;
-		muros[2]=false;
-		for(int i=1;i<lab.length-1;i++) {
-			muros=lab[0][i].getMuros();
-			muros[0]=false;
-		}
-		for(int i=1;i<lab.length-1;i++) {
-			muros=lab[i][0].getMuros();
-			muros[3]=false;
-		}
-		for(int i=1;i<lab.length-1;i++) {
-			muros=lab[lab.length-1][i].getMuros();
-			muros[2]=false;
-		}
-		for(int i=1;i<lab.length-1;i++) {
-			muros=lab[i][lab.length-1].getMuros();
-			muros[1]=false;
-		}
-		
-		
-	}
-	
-	public void prueba(Celda[][] lab) {
-		for (int i = 0 ; i<lab.length;i++) {
-			for(int j=0;j<lab.length;j++) {
-				
-				System.out.println(lab[i][j].toString());
-			}
-		}
-		
-	}
+            }
+        }
+    }
 
-	private Stack<Celda> vaciarPila(Stack<Celda> pila) {
-		Celda aux;
-		
-		while(!pila.isEmpty()){
-			
-			aux=stack.pop();
-			aux.setVisitado(false);
-			
-			
-		}
-		return pila;
-	
-	}
+   
+    public int getFilas() {
+        return filas;
+    }
 
-	public boolean existe(Celda actual, Stack<Celda> camino, int opcion, Celda[][] lab) {
-		boolean existe = false;
-		Celda aux;
+   
+    public void setFilas(int filas) {
+        this.filas = filas;
+    }
 
-		Iterator<Celda> it = camino.iterator();
-		while (it.hasNext()) {
-			System.out.println("hola: "+camino);
-			aux = it.next();
-			if (aux.getFila() == actual.getFila() && aux.getColumna() == actual.getColumna()) {
-				
-				existe = true;
-				
-				break;
+    public int getColumnas() {
+        return columnas;
+    }
 
-			}
-			
-		}
-	
-		return existe;
-	}
+    public void setColumnas(int columnas) {
+        this.columnas = columnas;
+    }
+    
+    public Celda[][] getLaberinto() {
+        return laberinto;
+    }
 
-	public Celda recolocar(Celda actual, Celda[][] lab, int opcion) {
-
-		if (opcion == 1) {
-			actual = actual.irSur(actual, lab);
-		} else if (opcion == 2) {
-			actual = actual.irOeste(actual, lab);
-		} else if (opcion == 3) {
-			actual = actual.irNorte(actual, lab);
-		} else if (opcion == 4) {
-			actual = actual.irEste(actual, lab);
-		}
-		return actual;
-	}
-
-	public int controlarEsquinas() {
-
-		int opcion = 0;
-
-		if (actual.getFila() == 0 && actual.getColumna() == 0) { // esquina superior izquierda
-			do {
-				opcion = r.nextInt(5);
-
-			} while (opcion < 2 || opcion > 3);
-
-		} else if (actual.getFila() == laberinto.length - 1 && actual.getColumna() == 0) { // esquina inferior izquierda
-			do {
-				opcion = r.nextInt(5);
-
-			} while (opcion < 1 || opcion > 2);
-
-		} else if (actual.getFila() == 0 && actual.getColumna() == laberinto.length - 1) { // esquina superior derecha
-			do {
-				opcion = r.nextInt(5);
-
-			} while (opcion < 3 || opcion > 4);
-
-		} else if (actual.getFila() == laberinto.length - 1 && actual.getColumna() == laberinto.length - 1) { // esquina
-																												// //
-																												// inferior
-																												// derecha
-			do {
-				opcion = r.nextInt(5);
-
-			} while (opcion != 1 && opcion != 4);
-
-		} else {
-			opcion = controlarLados();
-		}
-		return opcion;
-
-	}
-
-	public int controlarLados() {
-
-		int opcion = 0;
-
-		if (actual.getColumna() == 0) { // lado izquierdo
-			do {
-				opcion = r.nextInt(5);
-
-			} while (opcion == 4 || opcion == 0);
-
-		} else if (actual.getFila() == 0) { // lado superior
-			do {
-				opcion = r.nextInt(5);
-
-			} while (opcion == 1 || opcion == 0);
-
-		} else if (actual.getColumna() == laberinto.length - 1) { // lado derecho
-			do {
-				opcion = r.nextInt(5);
-
-			} while (opcion == 2 || opcion == 0);
-
-		} else if (actual.getFila() == laberinto.length - 1) { // lado inferior
-			do {
-				opcion = r.nextInt(5);
-
-			} while (opcion == 3 || opcion == 0);
-
-		}
-		return opcion;
-
-	}
-
-	public boolean laberintoCompleto(Celda[][] laberinto) {
-
-		boolean laberintoCompleto = true;
-
-		for (int i = 0; i < laberinto.length; i++)
-			for (int j = 0; j < laberinto[i].length; j++) {
-				if (!laberinto[i][j].isVisitado()) {
-					laberintoCompleto = false;
-				}
-			}
-
-		return laberintoCompleto;
-
-	}
-
-	public int getFilas() {
-		return filas;
-	}
-
-	public void setFilas(int filas) {
-		this.filas = filas;
-	}
-
-	public int getColumnas() {
-		return columnas;
-	}
-
-	public void setColumnas(int columnas) {
-		this.columnas = columnas;
-	}
-
-	public Celda[][] getLaberinto() {
-		return laberinto;
-	}
-
-	public void setLaberinto(Celda[][] laberinto) {
-		this.laberinto = laberinto;
-	}
-
+    private int elegirOpcion(int fila, int columna) {
+        Random r = new Random();
+        int opcion = r.nextInt(4); //norte =0, este=1, sur=2, oeste=3
+        boolean valido = false;
+        while (!valido) {
+            if (opcion == 0 && fila == 0) {
+                opcion = r.nextInt(4);
+            } else if (opcion == 1 && columna >= columnas - 1) {
+                opcion = r.nextInt(4);
+            } else if (opcion == 2 && fila >= filas - 1) {
+                opcion = r.nextInt(4);
+            } else if (opcion == 3 && columna == 0) {
+                opcion = r.nextInt(4);
+            } else {
+                valido = true;
+            }
+        }
+        return opcion;
+    }
 }
