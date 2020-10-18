@@ -125,12 +125,11 @@ public class Main {
     private void dibujar(){
         int tamaño_celda=10; //Tamaño de celda
         try {
-            System.out.println(laberinto.length);
             
-            BufferedImage lienzo = new BufferedImage(laberinto.length*tamaño_celda+5, laberinto[0].length*tamaño_celda+5, BufferedImage.TYPE_4BYTE_ABGR); //Pasar aqui filas y columnas del laberinto *100
+            BufferedImage lienzo = new BufferedImage(laberinto[0].length*tamaño_celda+5, laberinto.length*tamaño_celda+5, BufferedImage.TYPE_4BYTE_ABGR); //Pasar aqui filas y columnas del laberinto *100
             Graphics g = lienzo.createGraphics();
             g.setColor(Color.white);
-            g.fillRect(0, 0, laberinto.length*tamaño_celda, laberinto[0].length*tamaño_celda);
+            g.fillRect(0, 0, laberinto[0].length*tamaño_celda+3, laberinto.length*tamaño_celda+3);
             g.setColor(Color.black);
             // drawLine(posicion_actualx, posicion_actualy, posicion_destinox, posicion_destinoy)
             for(int i=0; i<laberinto.length; i++){
@@ -144,27 +143,22 @@ public class Main {
                     System.out.println(c[0]);
                     if(c[0] == false){
                         g.drawLine(columna, fila, columna + tamaño_celda, fila); //dibujar norte
-                        //fila+=10;
                     }
                     System.out.println(c[1]);
                     if(c[1] == false){
                         g.drawLine(columna + tamaño_celda, fila, columna + tamaño_celda, fila + tamaño_celda); // dibujar este
-                        //columna+=10;
                     }
                     System.out.println(c[2]);
                     if(c[2] == false){
                         g.drawLine(columna + tamaño_celda, fila + tamaño_celda, columna, fila + tamaño_celda); // dibujar sur
-                        //fila-=10;
                     }
                     System.out.println(c[3]);
                     if(c[3] == false){
-                        g.drawLine(columna, fila + tamaño_celda, columna, fila); //dibujar oeste
-                        //columna-=10;
+                        g.drawLine(columna, fila + tamaño_celda, columna, fila); //dibujar oeste           
                     }
                 }
             }
-            //System.out.println(lienzo.getGraphics());
-            ImageIO.write(lienzo, "png", new File("imagen.jpg"));  
+            ImageIO.write(lienzo, "jpg", new File("puzzle_"+laberinto.length+"x"+laberinto[0].length+".jpg"));  
         } catch (IOException ex) {
             System.err.println("Error en el buffer al dibujar");
         } catch (Exception e){
