@@ -159,7 +159,9 @@ public class Main {
                     }
                 }
             }
-            ImageIO.write(lienzo, "jpg", new File("puzzle_"+laberinto.length+"x"+laberinto[0].length+".jpg"));  
+            String archivo="puzzle_"+laberinto[0].length+"x"+laberinto.length+".jpg";
+            System.out.println(archivo);
+            ImageIO.write(lienzo, "png", new File(archivo));  
         } catch (IOException ex) {
             System.err.println("Error en el buffer al dibujar");
         } catch (Exception e){
