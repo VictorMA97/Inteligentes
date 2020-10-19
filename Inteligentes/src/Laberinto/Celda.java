@@ -71,7 +71,7 @@ public class Celda {
 
     @Override
     public String toString() {
-        return "(" + fila + ", " + columna + ") { vecinos: " + Arrays.toString(vecinos) + "}";
+        return "{ vecinos: " + Arrays.toString(vecinos) + "}";
 
     }
 

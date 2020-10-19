@@ -6,9 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import com.google.gson.*;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 public class Gestor_Archivos {
 
     public Celda[][] leerJson(String ruta) {
@@ -60,74 +57,19 @@ public class Gestor_Archivos {
 
     /*Escritura del json, para la escritura no necesito la celda en si, es mas cada celda del resultado*/
     public void escribirArchivoJson(String ruta, Celda[][] lab) {
-        Gson gson = new Gson(); //no s� si los parametros habr�a que pasarlos a string, o sea hacer la conversi�n
-        Main m = new Main();
-        ruta += "\\Resultado.json";
-
-        JSONObject archivo = new JSONObject();
-        JSONObject cells = obtenerCells(lab);
-        JSONArray id_movimiento = obtenerId();
-        archivo.put("row", m.getFila());
-        archivo.put("cols", m.getColumna());
-        archivo.put("max_n", 4);
-        archivo.put("id_movimiento", id_movimiento);
-        archivo.put("cells", cells);
-
-        try {
-            FileWriter fichero2 = new FileWriter(ruta);
-            fichero2.write(archivo.toString());
-            fichero2.flush();
-            fichero2.close();
-            System.out.println("Fichero creado.");
-        } catch (IOException ex) {
-            System.out.println("Error al escribir json");
-        }
-
-    }
-
-    public JSONArray obtenerId() {
-        JSONArray movimiento = new JSONArray();
-        JSONArray lista = new JSONArray();
-        lista.put(-1);
-        lista.put(0);
-        movimiento.put(lista);
-        lista = remove(lista);
-        lista.put(0);
-        lista.put(1);
-        movimiento.put(lista);
-        lista = remove(lista);
-        lista.put(1);
-        lista.put(0);
-        movimiento.put(lista);
-        lista = remove(lista);
-        lista.put(0);
-        lista.put(-1);
-        movimiento.put(lista);
-        return movimiento;
-    }
-
-    public JSONArray remove(JSONArray lista) {
-        for (int i = 0; i < lista.length(); i++) {
-            lista.remove(i);
-        }
-        return lista;
-    }
-
-    public JSONObject obtenerCells(Celda[][] laberinto) {
-        //Main m = new Main();
-        //Celda[][] laberinto = new Celda [m.getFila()][m.getColumna()];
-        //System.arraycopy(m.getLaberinto(), 0, laberinto, 0, laberinto.length);
-        //laberinto = m.getLaberinto();
-        JSONObject cells = new JSONObject();
-        for (int i = 0; i < laberinto.length -1; i++) {
-            for (int j = 0; j < laberinto[0].length -1; j++) {
-                JSONObject celda = new JSONObject();
-                boolean[] interiorCelda = laberinto[i][j].getVecinos();
-                celda.put("neighbors", interiorCelda);
-                cells.put("(" + String.valueOf(i) + "," + String.valueOf(j) + ")", celda);
-            }
-        }
-        return cells;
-    }
+    	Gson gson = new Gson(); //no s� si los parametros habr�a que pasarlos a string, o sea hacer la conversi�n
+		ruta += "\\Resultado.json";
+		Fichero fichero = new Fichero(lab);
+	
+    	try {
+    		FileWriter fichero2 = new FileWriter(ruta);
+    		fichero2.write(gson.toJson(fichero));
+    		fichero2.flush();
+    		fichero2.close();
+    		System.out.println("Fichero creado.");
+    	} catch (IOException ex) {
+    		System.out.println("Error al escribir json");
+    	}
+	}
 }
 

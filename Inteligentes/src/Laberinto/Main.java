@@ -62,6 +62,9 @@ public class Main {
             } catch (NumberFormatException e) {
                 System.err.println("Error solo datos numericos.");
                 bucle = true;
+            }catch (InputMismatchException ex) {
+            	System.err.println("Error solo datos numericos. Por favor vuelva a ejecutar el programa.");
+                bucle = false;
             }
         } while (bucle);
     }
