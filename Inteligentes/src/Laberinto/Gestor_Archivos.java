@@ -1,4 +1,4 @@
-package Laberintos;
+package laberinto;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
