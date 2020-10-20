@@ -1,4 +1,4 @@
-package laberinto;
+package Laberinto;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,24 +19,24 @@ public class Fichero {
 		this.cells = obtenerCelda(laberinto);
 	}
 	
-	public ArrayList<ArrayList<Integer>> obtenerId() {
-		ArrayList<ArrayList<Integer>> id_movimiento = new ArrayList<ArrayList<Integer>>();
-		ArrayList<Integer> a = new ArrayList<Integer>();
+	public ArrayList obtenerId() {
+		ArrayList id_movimiento = new ArrayList();
+		ArrayList a = new ArrayList();
 		a.add(-1);
 		a.add(0);
 		id_movimiento.add(a);
-		ArrayList<Integer> b = new ArrayList<Integer>();
-		b.add(0);
-		b.add(1);
-		id_movimiento.add(b);
-		ArrayList<Integer> c = new ArrayList<Integer>();
-		c.add(1);
-		c.add(0);
-		id_movimiento.add(c);
-		ArrayList<Integer> d = new ArrayList<Integer>();
-		d.add(0);
-		d.add(-1);
-		id_movimiento.add(d);
+		a.clear();
+		a.add(0);
+		a.add(1);
+		id_movimiento.add(a);
+		a.clear();
+		a.add(1);
+		a.add(0);
+		id_movimiento.add(a);
+		a.clear();
+		a.add(0);
+		a.add(-1);
+		id_movimiento.add(a);
 		System.out.println(id_movimiento);
 		return id_movimiento;
 	}

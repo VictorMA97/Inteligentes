@@ -1,4 +1,4 @@
-package laberinto;
+package Laberintos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,6 @@ public class Wilson {
         //Mientras queden nodos por visitar en la pila seguimos el recorrido
         while (porVisitar.size() != 0) {
             Celda actual = porVisitar.get(0); //Obtenemos la primera casilla de la pila para empezar el recorrido
-           
             visitados.add(actual); //marcamos la casilla actual como visitada
 
             //int numero=actual.getNumero();
@@ -55,12 +54,10 @@ public class Wilson {
             vecino = actual;
             int mov=0;
             while (visitados.contains(vecino) && mov <=4) {
-            	
                 int opcion = elegirOpcion(filaActual, columnaActual); //obtenemos la direccion del primer vecino de la casilla actual
                 switch (opcion) {
                     case 0: //norte
                         vecino = laberinto[filaActual - 1][columnaActual];
-             
                         mov++;
                         if (!visitados.contains(vecino)) {
                             boolean aux[] = actual.getVecinos();
@@ -76,7 +73,6 @@ public class Wilson {
 
                     case 1: //este
                         vecino = laberinto[filaActual][columnaActual + 1];
-                       
                         mov++;
                         if (!visitados.contains(vecino)) {
                             boolean aux[] = actual.getVecinos();
@@ -91,7 +87,6 @@ public class Wilson {
 
                     case 2: //sur
                         vecino = laberinto[filaActual + 1][columnaActual];
-                       
                         mov++;
                         if (!visitados.contains(vecino)) {
                             boolean aux[] = actual.getVecinos();
@@ -106,7 +101,6 @@ public class Wilson {
 
                     case 3: //oeste
                         vecino = laberinto[filaActual][columnaActual - 1];
-                       
                         mov++;
                         if (!visitados.contains(vecino)) {
                             boolean aux[] = actual.getVecinos();
