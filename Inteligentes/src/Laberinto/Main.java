@@ -23,12 +23,14 @@ public class Main {
         Scanner teclado = new Scanner(System.in);
         Gestor_Archivos ga=new Gestor_Archivos();
         boolean bucle = false;
+        boolean seguir=true;
         String rut;
         rut = null;
         int option=0;
-        System.out.println("1.Generar laberinto.\n2.Leer fichero json.\n3.Salir.");
-        System.out.println("Introduza la opcion del menu:");
+        
         do {
+        	System.out.println("\n1.Generar laberinto.\n2.Leer fichero json.\n3.Salir.");
+            System.out.println("Introduza la opcion del menu:");
             try {
                 option = teclado.nextInt();
                 switch (option) {
@@ -37,7 +39,7 @@ public class Main {
                         pedir_datos();
                         Wilson w = new Wilson(laberinto.length,laberinto[0].length);
                         w.generar();
-                        System.out.println("funciona");
+                        
                         System.arraycopy(w.getLaberinto(), 0, laberinto, 0, laberinto.length);
                         laberinto = w.getLaberinto();
                         dibujar();
@@ -53,7 +55,7 @@ public class Main {
                         break;
 
                     case 3:
-                        System.exit(0);
+                        seguir=false;
                         break;
                     default:
                         System.err.println("Solo valores entre 1 y 3.");
@@ -62,11 +64,9 @@ public class Main {
             } catch (NumberFormatException e) {
                 System.err.println("Error solo datos numericos.");
                 bucle = true;
-            }catch (InputMismatchException ex) {
-            	System.err.println("Error solo datos numericos. Por favor vuelva a ejecutar el programa.");
-                bucle = false;
             }
-        } while (bucle);
+        } while (bucle||seguir);
+        System.out.println("Fin del programa");
     }
 	
     private void pedir_datos() {
@@ -84,7 +84,6 @@ public class Main {
                 error = true;
             }
         } while (error);
-        System.out.println(fila+" "+columna);
         laberinto = new Celda[fila][columna];
     }
 
@@ -138,32 +137,31 @@ public class Main {
             // drawLine(posicion_actualx, posicion_actualy, posicion_destinox, posicion_destinoy)
             for(int i=0; i<laberinto.length; i++){
                 for(int j=0; j<laberinto[0].length; j++){
-                    System.out.println(laberinto[0].length);
-                    System.out.println();
+ 
                     boolean []c = laberinto[i][j].getVecinos();
                     
                     int fila = tamaño_celda*i;
                     int columna = tamaño_celda * j;
-                    System.out.println(c[0]);
+                   
                     if(c[0] == false){
                         g.drawLine(columna, fila, columna + tamaño_celda, fila); //dibujar norte
                     }
-                    System.out.println(c[1]);
+                   
                     if(c[1] == false){
                         g.drawLine(columna + tamaño_celda, fila, columna + tamaño_celda, fila + tamaño_celda); // dibujar este
                     }
-                    System.out.println(c[2]);
+                  
                     if(c[2] == false){
                         g.drawLine(columna + tamaño_celda, fila + tamaño_celda, columna, fila + tamaño_celda); // dibujar sur
                     }
-                    System.out.println(c[3]);
+                   
                     if(c[3] == false){
                         g.drawLine(columna, fila + tamaño_celda, columna, fila); //dibujar oeste           
                     }
                 }
             }
             String archivo="puzzle_"+laberinto[0].length+"x"+laberinto.length+".jpg";
-            System.out.println(archivo);
+            
             ImageIO.write(lienzo, "png", new File(archivo));  
         } catch (IOException ex) {
             System.err.println("Error en el buffer al dibujar");
