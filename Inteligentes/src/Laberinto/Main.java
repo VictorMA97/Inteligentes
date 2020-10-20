@@ -29,8 +29,8 @@ public class Main {
         int option=0;
         
         do {
-        	System.out.println("\n1.Generar laberinto.\n2.Leer fichero json.\n3.Salir.");
-            System.out.println("Introduza la opcion del menu:");
+            System.out.println("1.Generar laberinto.\n2.Leer fichero json.\n3.Salir.");
+            System.out.println("Introduza la opcion del menu: ");
             try {
                 option = teclado.nextInt();
                 switch (option) {
@@ -39,18 +39,18 @@ public class Main {
                         pedir_datos();
                         Wilson w = new Wilson(laberinto.length,laberinto[0].length);
                         w.generar();
-                        
+                        System.out.println("Laberinto generado.");
                         System.arraycopy(w.getLaberinto(), 0, laberinto, 0, laberinto.length);
                         laberinto = w.getLaberinto();
-                        dibujar();
+                        dibujar(ruta);
                         ga.escribirArchivoJson(ruta, laberinto);
                         bucle=false;
                         break;
                     case 2:
-                        rut = leer_json();
+                        rut = ruta_json();
                         Celda [][] aux = ga.leerJson(rut);
                         laberinto=aux;     //Leer json.
-                        dibujar();    
+                        dibujar(rut);    
                         bucle=false;
                         break;
 
@@ -65,7 +65,7 @@ public class Main {
                 System.err.println("Error solo datos numericos.");
                 bucle = true;
             }
-        } while (bucle||seguir);
+        } while (bucle);
         System.out.println("Fin del programa");
     }
 	
@@ -103,29 +103,7 @@ public class Main {
         return ruta;
     }
     
-    private static String leer_json() {
-        Scanner teclado = new Scanner(System.in);
-        boolean error = false;
-        String ruta = "";
-        String nombre = "";
-        do {
-            try {
-                System.out.println("Introduce la carpeta donde esta el json:");
-                ruta = teclado.nextLine();
-                System.out.println("Introduce el nombre del archivo:");
-                nombre = teclado.nextLine();
-
-            } catch (Exception e) {
-                System.out.println("Error al leer la ruta.");
-                error = true;
-            }
-        } while (error);
-
-        ruta = ruta + "\\" + nombre + ".json";
-        return ruta;
-    }
-    
-    private void dibujar(){
+    private void dibujar(String ruta){
         int tamaño_celda=10; //Tamaño de celda
         try {
             
@@ -134,35 +112,33 @@ public class Main {
             g.setColor(Color.white);
             g.fillRect(0, 0, laberinto[0].length*tamaño_celda+3, laberinto.length*tamaño_celda+3);
             g.setColor(Color.black);
-            // drawLine(posicion_actualx, posicion_actualy, posicion_destinox, posicion_destinoy)
             for(int i=0; i<laberinto.length; i++){
                 for(int j=0; j<laberinto[0].length; j++){
- 
-                    boolean []c = laberinto[i][j].getVecinos();
-                    
+       
+                    boolean []c = laberinto[i][j].getVecinos();  
                     int fila = tamaño_celda*i;
                     int columna = tamaño_celda * j;
-                   
+                    
                     if(c[0] == false){
                         g.drawLine(columna, fila, columna + tamaño_celda, fila); //dibujar norte
                     }
-                   
+                 
                     if(c[1] == false){
                         g.drawLine(columna + tamaño_celda, fila, columna + tamaño_celda, fila + tamaño_celda); // dibujar este
                     }
-                  
+                   
                     if(c[2] == false){
                         g.drawLine(columna + tamaño_celda, fila + tamaño_celda, columna, fila + tamaño_celda); // dibujar sur
                     }
-                   
+                    
                     if(c[3] == false){
                         g.drawLine(columna, fila + tamaño_celda, columna, fila); //dibujar oeste           
                     }
                 }
             }
-            String archivo="puzzle_"+laberinto[0].length+"x"+laberinto.length+".jpg";
-            
-            ImageIO.write(lienzo, "png", new File(archivo));  
+            ruta+="\\puzzle_"+laberinto[0].length+"x"+laberinto.length+".jpg";
+            System.out.println(ruta);
+            ImageIO.write(lienzo, "png", new File(ruta));  
         } catch (IOException ex) {
             System.err.println("Error en el buffer al dibujar");
         } catch (Exception e){

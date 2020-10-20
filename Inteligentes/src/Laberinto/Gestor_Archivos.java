@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import com.google.gson.*;
+import java.util.Scanner;
 
 public class Gestor_Archivos {
 
@@ -13,6 +14,8 @@ public class Gestor_Archivos {
         Main m = new Main();
         JsonParser parser = new JsonParser();
         FileReader fr = null;
+        String archivo=leer_json();
+        ruta+=archivo;
         try {
             fr = new FileReader(ruta);
         } catch (FileNotFoundException ex) {
@@ -58,7 +61,7 @@ public class Gestor_Archivos {
     /*Escritura del json, para la escritura no necesito la celda en si, es mas cada celda del resultado*/
     public void escribirArchivoJson(String ruta, Celda[][] lab) {
     	Gson gson = new Gson(); //no s� si los parametros habr�a que pasarlos a string, o sea hacer la conversi�n
-		ruta += "\\Resultado.json";
+		ruta += "\\puzzle_"+lab[0].length+"x"+lab.length+".json";
 		Fichero fichero = new Fichero(lab);
 	
     	try {
@@ -70,6 +73,26 @@ public class Gestor_Archivos {
     	} catch (IOException ex) {
     		System.out.println("Error al escribir json");
     	}
-	}
+    }
+    
+    private static String leer_json() {
+        Scanner teclado = new Scanner(System.in);
+        boolean error = false;
+        String ruta = "";
+        String nombre = "";
+        do {
+            try {
+                System.out.println("Introduce el nombre del archivo:");
+                nombre = teclado.nextLine();
+
+            } catch (Exception e) {
+                System.out.println("Error al leer la ruta.");
+                error = true;
+            }
+        } while (error);
+
+        ruta = ruta + "\\" + nombre + ".json";
+        return ruta;
+    }
 }
 
