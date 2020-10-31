@@ -1,8 +1,7 @@
-package Laberintos;
 
 public class Nodo {
     
-    Celda padre;
+    Nodo padre;
     Celda estado;
     int id;
     int costo;
@@ -11,7 +10,7 @@ public class Nodo {
     int heuristica;
     double valor; 
 
-    public Nodo(Celda padre, Celda estado, int id, int costo, int profundidad, int heuristica, double valor) {
+    public Nodo(Nodo padre, Celda estado, int id, int costo, int profundidad,int heuristica, double valor) {
         this.padre = padre;
         this.estado = estado;
         this.id = id;
@@ -23,10 +22,10 @@ public class Nodo {
     
     @Override
     public String toString() {
-        return "Nodo{" + "padre=" + padre + ", estado=" + estado + ", id=" + id + ", costo=" + costo + ", accion=" + accion + ", profundidad=" + profundidad + ", heuristica=" + heuristica + ", valor=" + valor + '}';
+        return "estado= (" + estado.getFila() +", "+estado.getColumna()+ "), id=" + id + ", costo=" + costo + ", accion=" + accion + ", profundidad=" + profundidad + ", heuristica=" + heuristica + ", valor=" + valor + '}';
     }
 
-    public void setPadre(Celda padre) {
+    public void setPadre(Nodo padre) {
         this.padre = padre;
     }
 
@@ -58,7 +57,7 @@ public class Nodo {
         this.valor = valor;
     }
 
-    public Celda getPadre() {
+    public Nodo getPadre() {
         return padre;
     }
 
