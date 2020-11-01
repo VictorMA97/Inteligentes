@@ -85,12 +85,13 @@ public class Main {
 		frontera.add(nodo);
 		Nodo aux;
 		boolean objetivo = false;
+		int id  = 0;
 
 		while (!frontera.isEmpty() && !objetivo) {
 
 			aux = frontera.get(0);
 
-			frontera = expandir(aux, laberinto, frontera);
+			id = expandir(id, aux, laberinto, frontera);
 			System.out.println(frontera);
 			if (funcionObjetivo(frontera, fin)) {
 
@@ -122,14 +123,13 @@ public class Main {
 
 	}
 
-	public ArrayList<Nodo> expandir(Nodo actual, Celda[][] laberinto, ArrayList<Nodo> frontera) {
+	public int expandir(int id,Nodo actual, Celda[][] laberinto, ArrayList<Nodo> frontera) {
 
 		Celda estado = actual.getEstado();
 		int fila = estado.getFila();
 		System.out.println("fila padre:" + fila);
 		int columna = estado.getColumna();
 		System.out.println("columna padre:" + columna);
-		int id = actual.getId();
 		int coste = actual.getCosto();
 		int profundidad = actual.getProfundidad();
 		boolean[] vecinos = estado.getVecinos();
@@ -141,9 +141,7 @@ public class Main {
 				case 0:
 					if (!laberinto[fila - 1][columna].isExpandido()) {
 						id += 1;
-						coste += 1;
-
-						n = new Nodo(actual, laberinto[fila - 1][columna], id, coste, profundidad + 1, coste,
+						n = new Nodo(actual, laberinto[fila - 1][columna], id, coste+1, profundidad + 1, coste+1,
 								(actual.getValor()) + 1);
 						n.getEstado().setExpandido(true);
 						n.setAccion('N');
@@ -154,9 +152,9 @@ public class Main {
 				case 1:
 					if (!laberinto[fila][columna+1].isExpandido()) {
 						id += 1;
-						coste += 1;
+						
 
-						n = new Nodo(actual, laberinto[fila][columna + 1], id, coste, profundidad + 1, coste,
+						n = new Nodo(actual, laberinto[fila][columna + 1], id, coste+1, profundidad + 1, coste+1,
 								(actual.getValor()) + 1);
 						n.setAccion('E');
 						frontera.add(n);
@@ -168,9 +166,9 @@ public class Main {
 				case 2:
 					if (!laberinto[fila + 1][columna].isExpandido()) {
 						id += 1;
-						coste += 1;
+						
 
-						n = new Nodo(actual, laberinto[fila + 1][columna], id, coste, profundidad + 1, coste,
+						n = new Nodo(actual, laberinto[fila + 1][columna], id, coste+1, profundidad + 1, coste+1,
 								(actual.getValor()) + 1);
 						n.setAccion('S');
 						frontera.add(n);
@@ -182,9 +180,9 @@ public class Main {
 				case 3:
 					if (!laberinto[fila][columna-1].isExpandido()) {
 						id += 1;
-						coste += 1;
+						
 
-						n = new Nodo(actual, laberinto[fila][columna - 1], id, coste, profundidad + 1, coste,
+						n = new Nodo(actual, laberinto[fila][columna - 1], id, coste+1, profundidad + 1, coste+1,
 								(actual.getValor()) + 1);
 						n.setAccion('O');
 						frontera.add(n);
@@ -196,7 +194,7 @@ public class Main {
 				}
 			}
 		}
-		return frontera;
+		return id;
 
 	}
 
