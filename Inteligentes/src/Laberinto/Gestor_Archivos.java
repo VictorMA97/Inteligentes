@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import com.google.gson.*;
 import java.util.Scanner;
+import com.google.gson.GsonBuilder;
 
 public class Gestor_Archivos {
 
@@ -60,7 +61,7 @@ public class Gestor_Archivos {
 
     /*Escritura del json, para la escritura no necesito la celda en si, es mas cada celda del resultado*/
     public void escribirArchivoJson(String ruta, Celda[][] lab) {
-    	Gson gson = new Gson(); //no s� si los parametros habr�a que pasarlos a string, o sea hacer la conversi�n
+    	Gson gson = new GsonBuilder().setPrettyPrinting().create(); //no s� si los parametros habr�a que pasarlos a string, o sea hacer la conversi�n
 		ruta += "\\puzzle_"+lab[0].length+"x"+lab.length+".json";
 		Fichero fichero = new Fichero(lab);
 	
