@@ -1,3 +1,5 @@
+package laberintos;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -67,17 +69,20 @@ public class Main {
 				bucle = true;
 			}
 		} while (bucle);
-		System.out.println("Fin del programa");
+		System.out.println("\nFin del programa");
 	}
 
 	public void funcionSucesora(Celda[][] laberinto) {
 
 		Random r = new Random();
 		ArrayList<Nodo> frontera = new ArrayList<Nodo>();
-		Celda inicio = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
-		inicio.setExpandido(true);
-		System.out.println(inicio.getFila() + " , " + inicio.getColumna());
-		Celda fin = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
+		Celda inicio, fin;
+		do {
+			inicio= laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
+			inicio.setExpandido(true);
+			System.out.println(inicio.getFila() + " , " + inicio.getColumna());
+			fin = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
+		}while(inicio.equals(fin));
 		System.out.println(fin.getFila() + " , " + fin.getColumna());
 		// Celda padre, Celda estado, int id, int costo, int profundidad, int
 		// heuristica, double valor
@@ -88,17 +93,17 @@ public class Main {
 		int id  = 0;
 
 		while (!frontera.isEmpty() && !objetivo) {
-
-			aux = frontera.get(0);
-
-			id = expandir(id, aux, laberinto, frontera);
-			System.out.println(frontera);
 			if (funcionObjetivo(frontera, fin)) {
 
 				objetivo = true;
 			}
 
+			aux = frontera.get(0);
+
+			System.out.print("\nSUC(("+aux.getEstado().getFila()+","+aux.getEstado().getColumna()+"))=");
 			frontera.remove(0);
+			id = expandir(id, aux, laberinto, frontera);
+
 
 		}
 
@@ -127,9 +132,9 @@ public class Main {
 
 		Celda estado = actual.getEstado();
 		int fila = estado.getFila();
-		System.out.println("fila padre:" + fila);
+
 		int columna = estado.getColumna();
-		System.out.println("columna padre:" + columna);
+		ArrayList<Nodo> auxiliar = new ArrayList<Nodo>();
 		int coste = actual.getCosto();
 		int profundidad = actual.getProfundidad();
 		boolean[] vecinos = estado.getVecinos();
@@ -146,18 +151,21 @@ public class Main {
 						n.getEstado().setExpandido(true);
 						n.setAccion('N');
 						frontera.add(n);
+						auxiliar.add(n);
+						n.getEstado().setExpandido(true);
 					}
 
 					break;
 				case 1:
 					if (!laberinto[fila][columna+1].isExpandido()) {
 						id += 1;
-						
+
 
 						n = new Nodo(actual, laberinto[fila][columna + 1], id, coste+1, profundidad + 1, coste+1,
 								(actual.getValor()) + 1);
 						n.setAccion('E');
 						frontera.add(n);
+						auxiliar.add(n);
 						n.getEstado().setExpandido(true);
 					}
 
@@ -166,12 +174,13 @@ public class Main {
 				case 2:
 					if (!laberinto[fila + 1][columna].isExpandido()) {
 						id += 1;
-						
+
 
 						n = new Nodo(actual, laberinto[fila + 1][columna], id, coste+1, profundidad + 1, coste+1,
 								(actual.getValor()) + 1);
 						n.setAccion('S');
 						frontera.add(n);
+						auxiliar.add(n);
 						n.getEstado().setExpandido(true);
 					}
 
@@ -180,12 +189,13 @@ public class Main {
 				case 3:
 					if (!laberinto[fila][columna-1].isExpandido()) {
 						id += 1;
-						
+
 
 						n = new Nodo(actual, laberinto[fila][columna - 1], id, coste+1, profundidad + 1, coste+1,
 								(actual.getValor()) + 1);
 						n.setAccion('O');
 						frontera.add(n);
+						auxiliar.add(n);
 						n.getEstado().setExpandido(true);
 					}
 
@@ -193,6 +203,9 @@ public class Main {
 
 				}
 			}
+		}
+		if(!auxiliar.isEmpty()) {
+			System.out.print(auxiliar);
 		}
 		return id;
 
@@ -238,7 +251,7 @@ public class Main {
 
 			BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamaño_celda + 5,
 					laberinto.length * tamaño_celda + 5, BufferedImage.TYPE_4BYTE_ABGR); // Pasar aqui filas y columnas
-																							// del laberinto *100
+			// del laberinto *100
 			Graphics g = lienzo.createGraphics();
 			g.setColor(Color.white);
 			g.fillRect(0, 0, laberinto[0].length * tamaño_celda + 3, laberinto.length * tamaño_celda + 3);
@@ -256,12 +269,12 @@ public class Main {
 
 					if (c[1] == false) {
 						g.drawLine(columna + tamaño_celda, fila, columna + tamaño_celda, fila + tamaño_celda); // dibujar
-																												// este
+						// este
 					}
 
 					if (c[2] == false) {
 						g.drawLine(columna + tamaño_celda, fila + tamaño_celda, columna, fila + tamaño_celda); // dibujar
-																												// sur
+						// sur
 					}
 
 					if (c[3] == false) {
