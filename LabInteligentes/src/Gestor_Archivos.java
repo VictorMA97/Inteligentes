@@ -1,3 +1,5 @@
+package Laberintos;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -37,12 +39,20 @@ public class Gestor_Archivos {
             for (int j = 0; j < laberinto[0].length; j++) {
                 Celda cel = new Celda(i, j);
                 JsonObject celda = cell.get("(" + i + ", " + j + ")").getAsJsonObject();
-                int value = celda.get("value").getAsInt();
-                if (value == 1) {
-                    cel.setVisitado(true);
-                } else if (value == 0) {
-                    cel.setVisitado(false);
+
+                if (celda.get("visitado") != null) {
+                    if (celda.get("visitado").getAsBoolean() == true || celda.get("visitado").getAsBoolean() == false) {
+                        cel.setVisitado(celda.get("visitado").getAsBoolean());
+                    }
+                } else {
+                    int value = celda.get("value").getAsInt();
+                    if (value == 1) {
+                        cel.setVisitado(true);
+                    } else if (value == 0) {
+                        cel.setVisitado(false);
+                    }
                 }
+
                 JsonArray neighbors = celda.get("neighbors").getAsJsonArray();
                 boolean[] muros = new boolean[neighbors.size()];
                 for (int k = 0; k < neighbors.size(); k++) {

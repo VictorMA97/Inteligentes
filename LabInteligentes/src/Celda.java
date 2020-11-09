@@ -1,3 +1,4 @@
+package Laberintos;
 
 import java.util.Arrays;
 
@@ -9,7 +10,7 @@ public class Celda {
     
     private boolean expandido;
 
-    private boolean[] vecinos = {false, false, false, false};
+    private boolean[] neighbors = {false, false, false, false};
 
     public Celda(int x, int y) {
         visitado = false;
@@ -52,11 +53,11 @@ public class Celda {
     }
 
     public boolean[] getVecinos() {
-        return vecinos;
+        return neighbors;
     }
 
     public void setVecinos(boolean[] vecinos) {
-        this.vecinos = vecinos;
+        this.neighbors = vecinos;
     }
 
     public boolean equals(Object obj) {
@@ -81,7 +82,7 @@ public class Celda {
 
     @Override
     public String toString() {
-        return "{ vecinos: " + Arrays.toString(vecinos) + "}";
+        return "{ vecinos: " + Arrays.toString(neighbors) + "}";
 
     }
 
