@@ -8,7 +8,7 @@ public class Fichero {
 	private int cols;
 	private int max_n;
 	private ArrayList id_movimiento;
-	private Map<String, String> cells;
+	private Map<String, ContenidoCelda> cells;
 	
 	public Fichero(Celda[][] laberinto){
 		this.row = laberinto.length;
@@ -38,13 +38,13 @@ public class Fichero {
 		id_movimiento.add(d);
 		return id_movimiento;
 	}
-	public Map<String, String> obtenerCelda(Celda[][] lab){
-		Map<String, String> cel = new LinkedHashMap<String, String>();
-		//Map<String, String> fafa = new HashMap<String, String>();
+	public Map<String, ContenidoCelda> obtenerCelda(Celda[][] lab){
+		Map<String, ContenidoCelda> cel = new LinkedHashMap<String, ContenidoCelda>();
 		for(int i=0; i<lab.length; i++) {
 			for(int j=0; j<lab[0].length; j++) {
 				Celda celda = lab[i][j];
-				cel.put("("+String.valueOf(i)+","+String.valueOf(j)+")", celda.toString());
+				ContenidoCelda cell = new ContenidoCelda(celda);
+				cel.put("("+String.valueOf(i)+","+String.valueOf(j)+")", cell);
 			}
 		}
 		return cel;
