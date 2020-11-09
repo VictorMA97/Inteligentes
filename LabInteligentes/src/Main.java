@@ -76,33 +76,39 @@ public class Main {
 		Random r = new Random();
 		ArrayList<Nodo> frontera = new ArrayList<Nodo>();
 		Celda inicio, fin;
+		Celda estado;
 		do {
 			inicio= laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
-			inicio.setExpandido(true);
 			System.out.println(inicio.getFila() + " , " + inicio.getColumna());
 			fin = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
 		}while(inicio.equals(fin));
 		System.out.println(fin.getFila() + " , " + fin.getColumna());
 		// Celda padre, Celda estado, int id, int costo, int profundidad, int
 		// heuristica, double valor
-		Nodo nodo = new Nodo(null, inicio, 0, 0, 0, 0, 0.0);
+		Nodo nodo = new Nodo(null, inicio, 0, 0, 0, 0, r.nextInt(101));
 		frontera.add(nodo);
-		Nodo aux;
+		Nodo aux=nodo;
+		Nodo siguiente;
 		boolean objetivo = false;
 		int id  = 0;
 
-		while (!frontera.isEmpty() && !objetivo) {
-			if (funcionObjetivo(frontera, fin)) {
-
-				objetivo = true;
-			}
+		while (!objetivo) {
+			
 
 			aux = frontera.get(0);
-
-			System.out.print("\nSUC(("+aux.getEstado().getFila()+","+aux.getEstado().getColumna()+"))=");
 			frontera.remove(0);
-			id = expandir(id, aux, laberinto, frontera);
+			if(!aux.getEstado().isExpandido()) {
+				System.out.print("\nSUC(("+aux.getEstado().getFila()+","+aux.getEstado().getColumna()+"))=");
+				id = expandir(id, aux, laberinto, frontera);
+				if (funcionObjetivo(frontera, fin)) {
 
+					objetivo = true;
+				}
+				frontera.clear();
+			}
+			estado=laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
+			siguiente=new Nodo(null,estado, id+1, aux.getCosto()+1, aux.getProfundidad()+1,aux.getHeuristica()+1,r.nextInt(101));
+			frontera.add(siguiente);
 
 		}
 
@@ -130,81 +136,67 @@ public class Main {
 	public int expandir(int id,Nodo actual, Celda[][] laberinto, ArrayList<Nodo> frontera) {
 
 		Celda estado = actual.getEstado();
+		estado.setExpandido(true);
 		int fila = estado.getFila();
-
 		int columna = estado.getColumna();
-		ArrayList<Nodo> auxiliar = new ArrayList<Nodo>();
 		int coste = actual.getCosto();
 		int profundidad = actual.getProfundidad();
 		boolean[] vecinos = estado.getVecinos();
+		Random r= new Random();
 		Nodo n;
+		//cambiar a expandido solo el padre
 		for (int i = 0; i < vecinos.length; i++) {
 			if (vecinos[i]) {
 
 				switch (i) {
 				case 0:
-					if (!laberinto[fila - 1][columna].isExpandido()) {
+					
 						id += 1;
 						n = new Nodo(actual, laberinto[fila - 1][columna], id, coste+1, profundidad + 1, coste+1,
-								(actual.getValor()) + 1);
+								r.nextInt(101));
 						n.getEstado().setExpandido(true);
 						n.setAccion('N');
 						frontera.add(n);
-						auxiliar.add(n);
-						n.getEstado().setExpandido(true);
-					}
-
+						
 					break;
 				case 1:
-					if (!laberinto[fila][columna+1].isExpandido()) {
+					
 						id += 1;
-
-
 						n = new Nodo(actual, laberinto[fila][columna + 1], id, coste+1, profundidad + 1, coste+1,
-								(actual.getValor()) + 1);
+								r.nextInt(101));
 						n.setAccion('E');
 						frontera.add(n);
-						auxiliar.add(n);
-						n.getEstado().setExpandido(true);
-					}
+						
 
 					break;
 
 				case 2:
-					if (!laberinto[fila + 1][columna].isExpandido()) {
+					
 						id += 1;
-
-
 						n = new Nodo(actual, laberinto[fila + 1][columna], id, coste+1, profundidad + 1, coste+1,
-								(actual.getValor()) + 1);
+								r.nextInt(101));
 						n.setAccion('S');
 						frontera.add(n);
-						auxiliar.add(n);
-						n.getEstado().setExpandido(true);
-					}
+						
 
 					break;
 
 				case 3:
-					if (!laberinto[fila][columna-1].isExpandido()) {
+					
 						id += 1;
-
-
 						n = new Nodo(actual, laberinto[fila][columna - 1], id, coste+1, profundidad + 1, coste+1,
-								(actual.getValor()) + 1);
+								r.nextInt(101));
 						n.setAccion('O');
 						frontera.add(n);
-						auxiliar.add(n);
-						n.getEstado().setExpandido(true);
-					}
+					
 
 					break;
 
 				}
 			}
 		}
-		if(!auxiliar.isEmpty()) {
-			System.out.print(auxiliar);
+		if(!frontera.isEmpty()) {
+			System.out.print(frontera);
 		}
 		return id;
 
