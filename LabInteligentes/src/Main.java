@@ -12,6 +12,8 @@ public class Main {
 
 	private int fila, columna;
 	private Celda[][] laberinto;
+	private Celda cInicio;
+	private Celda cFin;
 	public static int id = -1;
 
 	public static void main(String[] args) {
@@ -82,6 +84,7 @@ public class Main {
 			System.out.println(inicio.getFila() + " , " + inicio.getColumna());
 			fin = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
 		} while (inicio.equals(fin));
+		Sucesores sucesores=new Sucesores(inicio,fin);
 		System.out.println(fin.getFila() + " , " + fin.getColumna());
 		// Celda padre, Celda estado, int id, int costo, int profundidad, int
 		// heuristica, double valor
@@ -303,5 +306,11 @@ public class Main {
 
 	public void setLaberinto(Celda[][] laberinto) {
 		this.laberinto = laberinto;
+	}
+	public Celda getCeldaInicio() {
+		return cInicio;
+	}
+	public Celda getCeldaFin() {
+		return cFin;
 	}
 }
