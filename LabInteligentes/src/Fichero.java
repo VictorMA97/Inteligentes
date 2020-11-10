@@ -1,4 +1,3 @@
-package Laberintos;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
