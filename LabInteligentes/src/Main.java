@@ -12,7 +12,8 @@ public class Main {
 
 	private int fila, columna;
 	private Celda[][] laberinto;
-
+	private Celda inicio, fin;
+	
 	public static void main(String[] args) {
 		Main m = new Main();
 		m.menu();
@@ -42,9 +43,10 @@ public class Main {
 					System.out.println("Laberinto generado.");
 					System.arraycopy(w.getLaberinto(), 0, laberinto, 0, laberinto.length);
 					laberinto = w.getLaberinto();
+					funcionSucesora(laberinto);
 					dibujar(ruta);
 					ga.escribirArchivoJson(ruta, laberinto);
-					funcionSucesora(laberinto);
+					
 					// bucle=false;
 					break;
 				case 2:
@@ -75,7 +77,7 @@ public class Main {
 
 		Random r = new Random();
 		ArrayList<Nodo> frontera = new ArrayList<Nodo>();
-		Celda inicio, fin;
+		//Celda inicio, fin;
 		Celda estado;
 		do {
 			inicio= laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
@@ -237,39 +239,39 @@ public class Main {
 	}
 
 	private void dibujar(String ruta) {
-		int tamaño_celda = 10; // Tamaño de celda
+		int tamaÃ±o_celda = 10; // TamaÃ±o de celda
 		try {
 
-			BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamaño_celda + 5,
-					laberinto.length * tamaño_celda + 5, BufferedImage.TYPE_4BYTE_ABGR); // Pasar aqui filas y columnas
+			BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamaÃ±o_celda + 5,
+					laberinto.length * tamaÃ±o_celda + 5, BufferedImage.TYPE_4BYTE_ABGR); // Pasar aqui filas y columnas
 			// del laberinto *100
 			Graphics g = lienzo.createGraphics();
 			g.setColor(Color.white);
-			g.fillRect(0, 0, laberinto[0].length * tamaño_celda + 3, laberinto.length * tamaño_celda + 3);
+			g.fillRect(0, 0, laberinto[0].length * tamaÃ±o_celda + 3, laberinto.length * tamaÃ±o_celda + 3);
 			g.setColor(Color.black);
 			for (int i = 0; i < laberinto.length; i++) {
 				for (int j = 0; j < laberinto[0].length; j++) {
 
 					boolean[] c = laberinto[i][j].getVecinos();
-					int fila = tamaño_celda * i;
-					int columna = tamaño_celda * j;
+					int fila = tamaÃ±o_celda * i;
+					int columna = tamaÃ±o_celda * j;
 
 					if (c[0] == false) {
-						g.drawLine(columna, fila, columna + tamaño_celda, fila); // dibujar norte
+						g.drawLine(columna, fila, columna + tamaÃ±o_celda, fila); // dibujar norte
 					}
 
 					if (c[1] == false) {
-						g.drawLine(columna + tamaño_celda, fila, columna + tamaño_celda, fila + tamaño_celda); // dibujar
+						g.drawLine(columna + tamaÃ±o_celda, fila, columna + tamaÃ±o_celda, fila + tamaÃ±o_celda); // dibujar
 						// este
 					}
 
 					if (c[2] == false) {
-						g.drawLine(columna + tamaño_celda, fila + tamaño_celda, columna, fila + tamaño_celda); // dibujar
+						g.drawLine(columna + tamaÃ±o_celda, fila + tamaÃ±o_celda, columna, fila + tamaÃ±o_celda); // dibujar
 						// sur
 					}
 
 					if (c[3] == false) {
-						g.drawLine(columna, fila + tamaño_celda, columna, fila); // dibujar oeste
+						g.drawLine(columna, fila + tamaÃ±o_celda, columna, fila); // dibujar oeste
 					}
 				}
 			}
@@ -306,5 +308,11 @@ public class Main {
 
 	public void setLaberinto(Celda[][] laberinto) {
 		this.laberinto = laberinto;
+	}
+	public Celda getCeldaInicio () {
+		return inicio;
+	}
+	public Celda getCeldaFin () {
+		return fin;
 	}
 }
