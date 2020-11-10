@@ -1,42 +1,40 @@
+package Laberintos;
 
 public class Sucesores {
-	private String INITIAL;
-	private String OBJETIVE;
-	private String MAZE;
-	Celda inicio;
-	Celda fin;
-	
-	public Sucesores(Celda inicio,Celda fin) {
-		this.inicio=inicio;
-		this.fin=fin;
-	}
-	
-	
-	public Celda getInicio() {
-		return inicio;
-	}
 
+    private String INITIAL;
+    private String OBJETIVE;
+    private String MAZE;
+    Celda inicio;
+    Celda fin;
 
-	public void setInicio(Celda inicio) {
-		this.inicio = inicio;
-	}
+    public Celda getInicio() {
+        return inicio;
+    }
 
+    public void setInicio(Celda inicio) {
+        this.inicio = inicio;
+    }
 
-	public Celda getFin() {
-		return fin;
-	}
+    public Celda getFin() {
+        return fin;
+    }
 
+    public void setFin(Celda fin) {
+        this.fin = fin;
+    }
 
-	public void setFin(Celda fin) {
-		this.fin = fin;
-	}
+    public void nombreArchivo(String nombre) {
+        this.MAZE = nombre;
+    }
 
-
-	Sucesores (String nombre){
-		Main nuevo = new Main();
-		Gestor_Archivos gestor = new Gestor_Archivos();
-		this.INITIAL = "("+nuevo.getCeldaInicio().getFila()+","+nuevo.getCeldaInicio().getColumna()+")";
-		this.OBJETIVE = "("+nuevo.getCeldaFin().getFila()+","+nuevo.getCeldaFin().getColumna()+")";
-		this.MAZE = nombre;
-	}
+    public void sucesores(Celda inicio, Celda fin) {
+        Main nuevo = new Main();
+        //Gestor_Archivos gestor = new Gestor_Archivos();
+        int fila = inicio.getFila();
+        int columna = inicio.getColumna();
+        this.INITIAL = "(" + fila + ", " + columna + ")";
+        this.OBJETIVE = "(" + fila + ", " + columna + ")";
+        //this.MAZE = nombre;
+    }
 }

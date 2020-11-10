@@ -1,3 +1,5 @@
+package Laberintos;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,7 +28,7 @@ public class Wilson {
             }
         }
     }
-    
+
     public void generar() {
 
         //Conjuntos usados en el algoritmo de generacion
@@ -43,7 +45,7 @@ public class Wilson {
         //Mientras queden nodos por visitar en la pila seguimos el recorrido
         while (porVisitar.size() != 0) {
             Celda actual = porVisitar.get(0); //Obtenemos la primera casilla de la pila para empezar el recorrido
-           
+
             visitados.add(actual); //marcamos la casilla actual como visitada
 
             //int numero=actual.getNumero();
@@ -51,14 +53,14 @@ public class Wilson {
             columnaActual = actual.getColumna();
 
             vecino = actual;
-            int mov=0;
-            while (visitados.contains(vecino) && mov <=4) {
-            	
+            int mov = 0;
+            while (visitados.contains(vecino) && mov <= 4) {
+
                 int opcion = elegirOpcion(filaActual, columnaActual); //obtenemos la direccion del primer vecino de la casilla actual
                 switch (opcion) {
                     case 0: //norte
                         vecino = laberinto[filaActual - 1][columnaActual];
-             
+
                         mov++;
                         if (!visitados.contains(vecino)) {
                             boolean aux[] = actual.getVecinos();
@@ -67,14 +69,14 @@ public class Wilson {
                             boolean aux2[] = vecino.getVecinos();
                             aux2[2] = true;
                             vecino.setVecinos(aux2);
-                            porVisitar.add(0,vecino); //agregamos el vecino elegido a la lista de nodos por visitar      
+                            porVisitar.add(0, vecino); //agregamos el vecino elegido a la lista de nodos por visitar      
                         }
 
                         break;
 
                     case 1: //este
                         vecino = laberinto[filaActual][columnaActual + 1];
-                       
+
                         mov++;
                         if (!visitados.contains(vecino)) {
                             boolean aux[] = actual.getVecinos();
@@ -83,13 +85,13 @@ public class Wilson {
                             boolean aux2[] = vecino.getVecinos();
                             aux2[3] = true;
                             vecino.setVecinos(aux2);
-                            porVisitar.add(0,vecino);
+                            porVisitar.add(0, vecino);
                         }
                         break;
 
                     case 2: //sur
                         vecino = laberinto[filaActual + 1][columnaActual];
-                       
+
                         mov++;
                         if (!visitados.contains(vecino)) {
                             boolean aux[] = actual.getVecinos();
@@ -98,13 +100,13 @@ public class Wilson {
                             boolean aux2[] = vecino.getVecinos();
                             aux2[0] = true;
                             vecino.setVecinos(aux2);
-                            porVisitar.add(0,vecino);
+                            porVisitar.add(0, vecino);
                         }
                         break;
 
                     case 3: //oeste
                         vecino = laberinto[filaActual][columnaActual - 1];
-                       
+
                         mov++;
                         if (!visitados.contains(vecino)) {
                             boolean aux[] = actual.getVecinos();
@@ -113,24 +115,22 @@ public class Wilson {
                             boolean aux2[] = vecino.getVecinos();
                             aux2[1] = true;
                             vecino.setVecinos(aux2);
-                            porVisitar.add(0,vecino);
+                            porVisitar.add(0, vecino);
                         }
                         break;
 
                 }
-                if(mov==4){ 
+                if (mov == 4) {
                     porVisitar.remove(actual);
-		}
+                }
             }
         }
     }
 
-   
     public int getFilas() {
         return filas;
     }
 
-   
     public void setFilas(int filas) {
         this.filas = filas;
     }
@@ -142,7 +142,7 @@ public class Wilson {
     public void setColumnas(int columnas) {
         this.columnas = columnas;
     }
-    
+
     public Celda[][] getLaberinto() {
         return laberinto;
     }

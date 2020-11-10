@@ -1,4 +1,4 @@
-
+package Laberintos;
 
 import java.util.Arrays;
 
@@ -7,7 +7,7 @@ public class Celda {
     private int fila, columna;
 
     private boolean visitado;
-    
+
     private boolean expandido;
 
     private boolean[] neighbors = {false, false, false, false};
@@ -16,16 +16,16 @@ public class Celda {
         visitado = false;
         fila = x;
         columna = y;
-        expandido=false;
+        expandido = false;
 
     }
-    
+
     public boolean isExpandido() {
-    	return expandido;
+        return expandido;
     }
-    
+
     public void setExpandido(boolean expandido) {
-    	this.expandido = expandido;
+        this.expandido = expandido;
     }
 
     public boolean isVisitado() {
