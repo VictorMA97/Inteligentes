@@ -1,4 +1,4 @@
-package Laberintos;
+
 
 public class Nodo implements Comparable<Nodo> {
 

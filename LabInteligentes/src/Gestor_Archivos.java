@@ -1,4 +1,4 @@
-package Laberintos;
+
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -68,7 +68,7 @@ public class Gestor_Archivos {
     }
 
     /*Escritura del json, para la escritura no necesito la celda en si, es mas cada celda del resultado*/
-    public void escribirArchivoJson(String ruta, Celda[][] lab) {
+    public void escribirArchivoJson(String ruta, Celda[][] lab, Sucesores suce) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create(); 
         Gson gson1 = new GsonBuilder().create();
         String ruta1 = ruta;

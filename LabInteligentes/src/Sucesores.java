@@ -1,4 +1,3 @@
-package Laberintos;
 
 public class Sucesores {
 
