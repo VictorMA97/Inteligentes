@@ -31,4 +31,7 @@ public class Frontera {
     public void setLista(PriorityQueue<Nodo> lista) {
         this.lista = lista;
     }
+    public String toString() {
+		return "" + lista + "";
+	}
 }
