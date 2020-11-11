@@ -1,9 +1,12 @@
 package Laberintos;
 
+
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -28,6 +31,7 @@ public class Main {
         Scanner teclado = new Scanner(System.in);
         Gestor_Archivos ga = new Gestor_Archivos();
         boolean bucle = false;
+        Sucesores sucesor = new Sucesores();
         String rut;
         rut = null;
         int option = 0;
@@ -47,8 +51,8 @@ public class Main {
                         System.arraycopy(w.getLaberinto(), 0, laberinto, 0, laberinto.length);
                         laberinto = w.getLaberinto();
                         dibujar(ruta);
-                        funcionSucesora(laberinto);
-                        ga.escribirArchivoJson(ruta, laberinto);
+                        funcionSucesora(laberinto, ruta, sucesor);
+                        ga.escribirArchivoJson(ruta, laberinto, sucesor);
                         bucle = false;
                         break;
                     case 2:
@@ -56,7 +60,7 @@ public class Main {
                         Celda[][] aux = ga.leerJson(rut);
                         laberinto = aux; // Leer json.
                         dibujar(rut);
-                        funcionSucesora(laberinto);
+                        funcionSucesora(laberinto, rut, sucesor);
                         bucle = false;
                         break;
 
@@ -75,18 +79,19 @@ public class Main {
         System.out.println("\nFin del programa");
     }
 
-    public void funcionSucesora(Celda[][] laberinto) {
+    public void funcionSucesora(Celda[][] laberinto, String ruta, Sucesores suceso) {
 
         Random r = new Random();
         //Celda inicio, fin;
         Celda estado;
+        String archivo = "";
+        
         do {
             cInicio = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
             System.out.println(cInicio.getFila() + " , " + cInicio.getColumna());
             cFin = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
         } while (cInicio.equals(cFin));
-        Sucesores sucesores = new Sucesores();
-        sucesores.sucesores(cInicio, cFin);
+        suceso.sucesores(cInicio, cFin);
         System.out.println(cFin.getFila() + " , " + cFin.getColumna());
         Nodo nodo = new Nodo(null, cInicio, ++id, 0, 0, 0, r.nextInt(101));
         Frontera frontera = new Frontera();
@@ -102,7 +107,9 @@ public class Main {
             if (!aux.getEstado().isExpandido()) {
 
                 System.out.print("\nSUC((" + aux.getEstado().getFila() + "," + aux.getEstado().getColumna() + "))=");
-                expandir(aux, laberinto, frontera);
+                
+                archivo += "\nSUC((" + aux.getEstado().getFila() + "," + aux.getEstado().getColumna() + "))=";
+                archivo += expandir(aux, laberinto, frontera);
 
                 if (funcionObjetivo(frontera, cFin)) {
                     objetivo = true;
@@ -117,7 +124,17 @@ public class Main {
             frontera.insertar(siguiente);
 
         }
-
+        ruta +="\\Sucesores_"+fila+"x"+columna+".txt" ;
+        File f = new File(ruta);
+        try {
+			FileWriter fw = new FileWriter(f);
+			fw.write(archivo);
+			fw.close();
+			System.out.println("\nFichero txt creado.");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public boolean funcionObjetivo(Frontera frontera, Celda fin) {
@@ -137,7 +154,7 @@ public class Main {
 
     }
 
-    public void expandir(Nodo actual, Celda[][] laberinto, Frontera frontera) {
+    public String expandir(Nodo actual, Celda[][] laberinto, Frontera frontera) {
 
         Celda estado = actual.getEstado();
         estado.setExpandido(true);
@@ -146,6 +163,7 @@ public class Main {
         int coste = actual.getCosto();
         int profundidad = actual.getProfundidad();
         boolean[] vecinos = estado.getVecinos();
+        String expansion = "";
         Random r = new Random();
         Nodo n;
         // cambiar a expandido solo el padre
@@ -155,7 +173,6 @@ public class Main {
                 switch (i) {
                     case 0:
 
-                        id += 1;
                         n = new Nodo(actual, laberinto[fila - 1][columna], ++id, coste + 1, profundidad + 1, coste + 1,
                                 r.nextInt(101));
                         n.setAccion('N');
@@ -164,7 +181,6 @@ public class Main {
                         break;
                     case 1:
 
-                        id += 1;
                         n = new Nodo(actual, laberinto[fila][columna + 1], ++id, coste + 1, profundidad + 1, coste + 1,
                                 r.nextInt(101));
                         n.setAccion('E');
@@ -174,7 +190,6 @@ public class Main {
 
                     case 2:
 
-                        id += 1;
                         n = new Nodo(actual, laberinto[fila + 1][columna], ++id, coste + 1, profundidad + 1, coste + 1,
                                 r.nextInt(101));
                         n.setAccion('S');
@@ -184,7 +199,6 @@ public class Main {
 
                     case 3:
 
-                        id += 1;
                         n = new Nodo(actual, laberinto[fila][columna - 1], ++id, coste + 1, profundidad + 1, coste + 1,
                                 r.nextInt(101));
                         n.setAccion('O');
@@ -196,9 +210,11 @@ public class Main {
             }
         }
         if (!frontera.isEmpty()) {
+        	
             System.out.print(frontera.getLista());
+            expansion = frontera.getLista().toString();
         }
-
+        return expansion;
     }
 
     private void pedir_datos() {
@@ -236,7 +252,7 @@ public class Main {
     }
 
     private void dibujar(String ruta) {
-        int tamano_celda = 10; // Tama�o de celda
+        int tamano_celda = 10; // Tamaño de celda
         try {
 
             BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamano_celda + 5,
