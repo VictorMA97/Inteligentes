@@ -69,26 +69,27 @@ public class Gestor_Archivos {
 
     /*Escritura del json, para la escritura no necesito la celda en si, es mas cada celda del resultado*/
     public void escribirArchivoJson(String ruta, Celda[][] lab) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create(); //no s� si los parametros habr�a que pasarlos a string, o sea hacer la conversi�n
+        Gson gson = new GsonBuilder().setPrettyPrinting().create(); 
+        Gson gson1 = new GsonBuilder().create();
         String ruta1 = ruta;
         String nombre = "sucesor_" + lab[0].length + "x" + lab.length + "maze.json";
         ruta += "\\sucesor_" + lab[0].length + "x" + lab.length + ".json";
         ruta1 += "\\";
         ruta1 += nombre;
         Fichero fichero = new Fichero(lab);
-        Sucesores s = new Sucesores();
-        s.nombreArchivo(nombre);
-
+        //Sucesores sucesor = new Sucesores();
+        suce.nombreArchivo(nombre);
+        //String json_maze = suce.toString();
         try {
             FileWriter fichero2 = new FileWriter(ruta);
-            FileWriter sucesor = new FileWriter(ruta1);
+            FileWriter sucesor1 = new FileWriter(ruta1);
             fichero2.write(gson.toJson(fichero));
-            fichero2.write(gson.toJson(s));
+            sucesor1.write(gson1.toJson(suce));
             fichero2.flush();
-            sucesor.flush();
+            sucesor1.flush();
             fichero2.close();
-            sucesor.close();
-            System.out.println("Fichero creado.");
+            sucesor1.close();
+            System.out.println("Fichero json creado.");
         } catch (IOException ex) {
             System.out.println("Error al escribir json");
         }
