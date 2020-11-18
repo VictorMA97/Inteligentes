@@ -1,6 +1,4 @@
-
-
-
+package Laberintos;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
@@ -20,6 +17,7 @@ public class Main {
     private Celda cInicio;
     private Celda cFin;
     public static int id = -1;
+    
 
     public static void main(String[] args) {
         Main m = new Main();
@@ -84,8 +82,10 @@ public class Main {
         Random r = new Random();
         //Celda inicio, fin;
         Celda estado;
+        int costo;
+        int heuristica;
         String archivo = "";
-        
+
         do {
             cInicio = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
             System.out.println(cInicio.getFila() + " , " + cInicio.getColumna());
@@ -93,7 +93,10 @@ public class Main {
         } while (cInicio.equals(cFin));
         suceso.sucesores(cInicio, cFin);
         System.out.println(cFin.getFila() + " , " + cFin.getColumna());
-        Nodo nodo = new Nodo(null, cInicio, ++id, 0, 0, 0, r.nextInt(101));
+        estado = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
+        heuristica= Math.abs(fila-estado.getFila()) + Math.abs(columna-estado.getColumna());
+        Nodo nodo = new Nodo(null, cInicio, ++id, 0, 0, heuristica, r.nextInt(101));
+        
         Frontera frontera = new Frontera();
         frontera.insertar(nodo);
         Nodo aux = nodo;
@@ -107,7 +110,7 @@ public class Main {
             if (!aux.getEstado().isExpandido()) {
 
                 System.out.print("\nSUC((" + aux.getEstado().getFila() + "," + aux.getEstado().getColumna() + "))=");
-                
+
                 archivo += "\nSUC((" + aux.getEstado().getFila() + "," + aux.getEstado().getColumna() + "))=";
                 archivo += expandir(aux, laberinto, frontera);
 
@@ -118,23 +121,24 @@ public class Main {
             } else {
                 --id;
             }
-            estado = laberinto[r.nextInt(laberinto.length)][r.nextInt(laberinto[0].length)];
-            siguiente = new Nodo(null, estado, ++id, aux.getCosto() + 1, aux.getProfundidad() + 1,
-                    aux.getHeuristica() + 1, r.nextInt(101));
+            
+            costo=r.nextInt(3);
+            siguiente = new Nodo(null, estado, ++id, aux.getCosto() + costo + 1, aux.getProfundidad() + 1,
+                    aux.getHeuristica(), r.nextInt(101));
             frontera.insertar(siguiente);
 
         }
-        ruta +="\\Sucesores_"+fila+"x"+columna+".txt" ;
+        ruta += "\\Sucesores_" + fila + "x" + columna + ".txt";
         File f = new File(ruta);
         try {
-			FileWriter fw = new FileWriter(f);
-			fw.write(archivo);
-			fw.close();
-			System.out.println("\nFichero txt creado.");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            FileWriter fw = new FileWriter(f);
+            fw.write(archivo);
+            fw.close();
+            System.out.println("\nFichero txt creado.");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public boolean funcionObjetivo(Frontera frontera, Celda fin) {
@@ -155,13 +159,14 @@ public class Main {
     }
 
     public String expandir(Nodo actual, Celda[][] laberinto, Frontera frontera) {
-
+        
         Celda estado = actual.getEstado();
         estado.setExpandido(true);
         int fila = estado.getFila();
         int columna = estado.getColumna();
         int coste = actual.getCosto();
         int profundidad = actual.getProfundidad();
+        int heuristica;
         boolean[] vecinos = estado.getVecinos();
         String expansion = "";
         Random r = new Random();
@@ -169,48 +174,59 @@ public class Main {
         // cambiar a expandido solo el padre
         for (int i = 0; i < vecinos.length; i++) {
             if (vecinos[i]) {
-
+                int costo;
                 switch (i) {
                     case 0:
-
-                        n = new Nodo(actual, laberinto[fila - 1][columna], ++id, coste + 1, profundidad + 1, coste + 1,
+                        costo= r.nextInt(3);
+                        heuristica= Math.abs(fila-laberinto[fila - 1][columna].getFila()) + Math.abs(columna-laberinto[fila - 1][columna].getColumna());
+                        actual.setHeuristica(heuristica);
+                        n = new Nodo(actual, laberinto[fila - 1][columna], ++id, actual.getPadre().getCosto()+ costo + 1, profundidad + 1, heuristica ,
                                 r.nextInt(101));
+                        
                         n.setAccion('N');
                         frontera.insertar(n);
 
                         break;
                     case 1:
-
-                        n = new Nodo(actual, laberinto[fila][columna + 1], ++id, coste + 1, profundidad + 1, coste + 1,
+                        costo= r.nextInt(3);
+                        heuristica= Math.abs(fila-laberinto[fila][columna + 1].getFila()) + Math.abs(columna-laberinto[fila][columna + 1].getColumna());
+                        actual.setHeuristica(heuristica);
+                        n = new Nodo(actual, laberinto[fila][columna + 1], ++id, coste + 1, profundidad + 1, actual.getPadre().getCosto()+ costo + 1,
                                 r.nextInt(101));
+                        
                         n.setAccion('E');
                         frontera.insertar(n);
 
                         break;
 
                     case 2:
-
-                        n = new Nodo(actual, laberinto[fila + 1][columna], ++id, coste + 1, profundidad + 1, coste + 1,
+                        costo= r.nextInt(3);
+                        heuristica= Math.abs(fila-laberinto[fila + 1][columna].getFila()) + Math.abs(columna-laberinto[fila + 1][columna].getColumna());
+                        actual.setHeuristica(heuristica);
+                        n = new Nodo(actual, laberinto[fila + 1][columna], ++id, coste + 1, profundidad + 1, actual.getPadre().getCosto()+ costo + 1,
                                 r.nextInt(101));
+                        
                         n.setAccion('S');
                         frontera.insertar(n);
 
                         break;
 
                     case 3:
-
-                        n = new Nodo(actual, laberinto[fila][columna - 1], ++id, coste + 1, profundidad + 1, coste + 1,
+                        costo =r.nextInt(3);
+                        heuristica= Math.abs(fila- laberinto[fila][columna - 1].getFila()) + Math.abs(columna- laberinto[fila][columna - 1].getColumna());
+                        actual.setHeuristica(heuristica);
+                        n = new Nodo(actual, laberinto[fila][columna - 1], ++id, coste + 1, profundidad + 1, actual.getPadre().getCosto()+ costo + 1,
                                 r.nextInt(101));
+                        
                         n.setAccion('O');
                         frontera.insertar(n);
 
                         break;
-
                 }
             }
         }
         if (!frontera.isEmpty()) {
-        	
+
             System.out.print(frontera.getLista());
             expansion = frontera.getLista().toString();
         }
