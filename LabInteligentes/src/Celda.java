@@ -1,3 +1,4 @@
+package Laberintos;
 
 import java.util.Arrays;
 

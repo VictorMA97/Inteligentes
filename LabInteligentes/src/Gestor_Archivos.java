@@ -1,14 +1,49 @@
+package Laberintos;
 
-
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import com.google.gson.*;
+
 import java.util.Scanner;
-import com.google.gson.GsonBuilder;
 
 public class Gestor_Archivos {
+
+    private Celda cInicio;
+    private Celda cFin;
+
+    public void leerMaze(String ruta) {
+        Gson gson = new Gson();
+        ruta += leer_json();
+        String fichero = "";
+        Celda[][] laberinto = null;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                fichero += linea;
+            }
+
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        Contenido_Maze datos = gson.fromJson(fichero, Contenido_Maze.class);
+        String[] inicial = datos.getINITIAL().replace(" ", "").split("");
+        String[] fin = datos.getOBJETIVE().replace(" ", "").split("");
+        int inicialx = Integer.parseInt(inicial[1]);
+        int inicialy = Integer.parseInt(inicial[3]);
+        int finx = Integer.parseInt(fin[1]);
+        int finy = Integer.parseInt(fin[3]);
+        System.out.print(inicialx);
+
+        String nombre = datos.getMAZE();
+        cInicio = laberinto[inicialx][inicialy];
+        cFin = laberinto[finx][finy];
+    }
 
     public Celda[][] leerJson(String ruta) {
 
@@ -69,7 +104,7 @@ public class Gestor_Archivos {
 
     /*Escritura del json, para la escritura no necesito la celda en si, es mas cada celda del resultado*/
     public void escribirArchivoJson(String ruta, Celda[][] lab, Sucesores suce) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create(); 
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Gson gson1 = new GsonBuilder().create();
         String ruta1 = ruta;
         String nombre = "sucesor_" + lab[0].length + "x" + lab.length + "maze.json";
@@ -115,7 +150,11 @@ public class Gestor_Archivos {
         return ruta;
     }
 
-    void escribirArchivoJson(String ruta, Celda[][] laberinto, Celda cInicio, Celda cFin) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Celda getcInicio() {
+        return cInicio;
+    }
+
+    public Celda getcFin() {
+        return cFin;
     }
 }

@@ -1,3 +1,4 @@
+package Laberintos;
 
 public class Sucesores {
 
@@ -13,7 +14,8 @@ public class Sucesores {
         this.INITIAL = "(" + inicio.getFila() + ", " + inicio.getColumna() + ")";
         this.OBJETIVE = "(" + fin.getFila() + ", " + fin.getColumna() + ")";
     }
+
     public String toString() {
-		return "{"+"INITIAL: " + INITIAL + ", OBJETIVE: " + OBJETIVE + ", MAZE: " + MAZE + "}";
-	}
+        return "{" + "INITIAL: " + INITIAL + ", OBJETIVE: " + OBJETIVE + ", MAZE: " + MAZE + "}";
+    }
 }
