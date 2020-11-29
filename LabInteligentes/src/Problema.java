@@ -1,4 +1,3 @@
-package Laberintos;
 
 public class Problema {
 
@@ -38,7 +37,7 @@ public class Problema {
     }
     
     public void setMaze(String nombre) {
-    	this.MAZE = nombre;
+    	this.maze = nombre;
     }
 
     @Override
