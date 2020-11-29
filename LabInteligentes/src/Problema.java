@@ -5,6 +5,7 @@ public class Problema {
     private Celda inicial;
     private Celda objetivo;
     private Celda[][] laberinto;
+    private String maze;
 
     public Problema(Celda inicial, Celda objetivo, Celda[][] laberinto) {
         this.inicial = inicial;
@@ -35,10 +36,14 @@ public class Problema {
     public void setLaberinto(Celda[][] laberinto) {
         this.laberinto = laberinto;
     }
+    
+    public void setMaze(String nombre) {
+    	this.MAZE = nombre;
+    }
 
     @Override
     public String toString() {
-        return "{" + "INITIAL=" + inicial + ", OBJETIVE=" + objetivo;
+        return "{" + "INITIAL=" + inicial + ", OBJETIVE=" + objetivo+ ", MAZE "+ maze;
     }
 
     boolean isObjetivo(Celda estado) {

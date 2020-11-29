@@ -68,36 +68,6 @@ public class Gestor_Archivos {
         return laberinto;
     }
     
-    /*public Celda[][] leerMaze(String ruta) {
-        String ruta_problemas = ruta + leer_json();
-        JsonParser parser = new JsonParser();
-        int[] inicial = new int[2];
-        int[] fin = new int[2];
-
-        FileReader fr = null;
-        try {
-            fr = new FileReader(ruta_problemas);
-        } catch (FileNotFoundException ex) {
-            System.out.println("No se ha encontrado el archivo");
-            System.exit(1);
-        }
-        JsonElement datos = parser.parse(fr);
-        JsonObject obj = datos.getAsJsonObject();
-        JsonArray coord = obj.get("INITIAL").getAsJsonArray();
-        inicial[0] = coord.get(0).getAsInt();
-        inicial[1] = coord.get(1).getAsInt();
-        JsonArray coord1 = obj.get("OBJETIVE").getAsJsonArray();
-        fin[0] = coord1.get(0).getAsInt();
-        fin[1] = coord1.get(1).getAsInt();
-        Celda[][] laberinto = leerJson(ruta);
-        cInicio = laberinto[inicial[0]][inicial[1]];
-        cFin = laberinto[fin[0]][fin[1]];
-
-        System.out.println("La celda inicial es: " + cInicio);
-        System.out.println("La celda objetivo es: " + cFin);
-
-        return laberinto;
-    }*/
 
     public Celda[][] leerJson(String ruta) {
 
@@ -164,17 +134,17 @@ public class Gestor_Archivos {
         ruta1 += "\\";
         ruta1 += nombre;
         Fichero fichero = new Fichero(lab);
-        //Sucesores sucesor = new Sucesores();
-        //Contenido_Maze archivo_IOM = new Contenifo_Maze(suce.getInicial(), suce.getObjetivo(),nombre_maze);
-        //String json_maze = suce.toString();
+        
+        suce.setMaze(nombre_maze);
+        
         try {
             FileWriter sucesor1;
             try (FileWriter fichero2 = new FileWriter(ruta)) {
-                sucesor1 = new FileWriter(ruta1);
-                fichero2.write(gson.toJson(fichero));
-                //sucesor1.write(gson1.toJson());
-                fichero2.flush();
-                //sucesor1.flush();
+            	 sucesor1 = new FileWriter(ruta1);
+                 fichero2.write(gson.toJson(fichero));
+                 sucesor1.write(gson1.toJson(suce.toString()));
+                 fichero2.flush();
+                 sucesor1.flush();
             }
             sucesor1.close();
             System.out.println("Fichero json creado.");
