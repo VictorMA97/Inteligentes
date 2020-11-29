@@ -200,7 +200,7 @@ public class Main {
         }
 
         try {
-            ruta += "\\puzzle_" + laberinto.length + "x" + laberinto[0].length + "BUCLE.jpg";
+            ruta += "\\puzzle_" + laberinto.length + "x" + laberinto[0].length + ".jpg";
             System.out.println(ruta);
             ImageIO.write(lienzo, "png", new File(ruta));
         } catch (IOException ex) {
@@ -239,7 +239,7 @@ public class Main {
                 estrate = "A";
                 break;
         }
-        String nombre = "\\sol_" + fila + "x" + columna + "_" + estrate + "NUESTRO.txt";
+        String nombre = "\\sol_" + fila + "x" + columna + "_" + estrate + ".txt";
         ruta = ruta + nombre;
         try {
             FileWriter fw = new FileWriter(new File(ruta));
