@@ -1,5 +1,7 @@
 package Laberintos;
 
+import Laberintos.Celda;
+
 
 public class Contenido_Maze {
 	private String INITIAL;

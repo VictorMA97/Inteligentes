@@ -21,7 +21,6 @@ public class Busqueda {
         ArrayList<Celda> visitados = new ArrayList<>();
         ArrayList<Nodo> frontera = new ArrayList<>();
 
-        //System.out.println("LA PILA TIENE EL COMPARADOR:" + frontera.());
         Celda estado = problema.getInicial();
         String accion = "none"; //la accion del nodo N,E,S,O
         int profundidadNodo = 0;
@@ -40,13 +39,8 @@ public class Busqueda {
 
             nodo = frontera.get(0); //Esto hay que revisarlo
             frontera.remove(0);
-            System.out.println("Nodo actual:" + nodo.toString());
-            System.out.println("Condicion 1:" + (!visitados.contains(nodo.getEstado())));
-            System.out.println("Condicion 2: " + (nodo.getProfundidad() < profundidad));
 
             if (problema.isObjetivo(nodo.getEstado())) {
-                //Collections.sort(frontera, new comparadorNodo());
-                System.out.println("Nodo objetivo en if objetivo: " + nodo.getEstado().toString());
                 solucion = true;
             } else if ((!visitados.contains(nodo.getEstado())) && (nodo.getProfundidad() < profundidad)) {
 

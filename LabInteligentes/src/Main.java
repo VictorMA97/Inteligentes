@@ -29,14 +29,14 @@ public class Main {
         Scanner teclado = new Scanner(System.in);
         Gestor_Archivos ga = new Gestor_Archivos();
         Busqueda b = new Busqueda();
-        boolean bucle = false;
         int estrategia;
         Random r = new Random();
         Celda inicial;
         Celda objetivo;
         Problema problema;
         String rut;
-        ArrayList<Nodo> solucion = new ArrayList<>();
+        ArrayList<Nodo> solucion = new ArrayList();
+
         final int profundidad_maxima = 1000000;
         rut = null;
         int option = 0;
@@ -79,7 +79,7 @@ public class Main {
                 inicial = ga.getcInicio();
                 objetivo = ga.getcFin();
                 problema = new Problema(inicial, objetivo, laberinto);
-                solucion = b.busquedaSolucion(problema, profundidad_maxima, estrategia);
+                solucion = (ArrayList<Nodo>) b.busquedaSolucion(problema, profundidad_maxima, estrategia).clone();
                 crear_txt(solucion, rut, estrategia);
                 dibujar(rut, solucion);
 
@@ -146,7 +146,7 @@ public class Main {
 
     public void dibujar(String ruta, ArrayList<Nodo> solucion) {
         int tamano_celda = 10; // Tama�o de celda
-
+        ArrayList<Celda> solucionC = new ArrayList<>();
         BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamano_celda + 5,
                 laberinto.length * tamano_celda + 5, BufferedImage.TYPE_4BYTE_ABGR); // Pasar aqui filas y columnas
         // del laberinto *100
@@ -180,17 +180,27 @@ public class Main {
                 }
             }
         }
-        
-        for (int i = 0; i< solucion.size(); i++){
-            Celda aux = solucion.get(i).getEstado();
-            g.setColor(Color.red);
-            
-            g.fillRect(aux.getFila(), aux.getColumna(), aux.getFila()*tamano_celda, aux.getColumna()*tamano_celda);
-            //g.fillRect(aux.getFila() * tamano_celda, aux.getColumna() * tamano_celda, aux.getFila() * tamano_celda + tamano_celda , aux.getColumna() * tamano_celda + tamano_celda);
+       
+        for (int i = 0; i < solucion.size(); i++) {
+            solucionC.add(solucion.get(i).getEstado());
         }
-        
+
+        for (int i = 0; i < solucion.size(); i++) {
+            System.out.println("Prueba:" + solucion.get(i));
+        }
+        for (int i = 0; i < laberinto.length; i++) {
+            for (int j = 0; j < laberinto[0].length; j++) {
+                for (int z = 0; z < solucionC.size(); z++) {
+                    if (solucionC.get(z).equals(laberinto[i][j])) {
+                        g.setColor(Color.red);
+                        g.fillRect(tamano_celda * j, tamano_celda * i, tamano_celda, tamano_celda);
+                    }
+                }
+            }
+        }
+
         try {
-            ruta += "\\puzzle_" + laberinto.length + "x" + laberinto[0].length + ".jpg";
+            ruta += "\\puzzle_" + laberinto.length + "x" + laberinto[0].length + "BUCLE.jpg";
             System.out.println(ruta);
             ImageIO.write(lienzo, "png", new File(ruta));
         } catch (IOException ex) {
@@ -202,48 +212,15 @@ public class Main {
         System.out.println("Imagen generada correctamente.");
     }
 
-    public void pintarCamino(ArrayList<Nodo> solucion, String ruta, Graphics g) {
-        int tamano_celda = 10; // Tama�o de celda
-        BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamano_celda + 5,
-                laberinto.length * tamano_celda + 5, BufferedImage.TYPE_4BYTE_ABGR); // Pasar aqui filas y columnas
-        
-        
-        
-        for (int i = 0; i< solucion.size(); i++){
-            Celda aux = solucion.get(i).getEstado();
-            g.setColor(Color.red);
-            g.fillRect(0, 0, aux.getFila() * tamano_celda, aux.getColumna() * tamano_celda);
-            
-            
-        }
-        try {
-            ruta += "\\sol_" + laberinto.length + "x" + laberinto[0].length + ".jpg";
-            System.out.println(ruta);
-            ImageIO.write(lienzo, "png", new File(ruta));
-        } catch (IOException ex) {
-            System.err.println("Error en el buffer al dibujar");
-        } catch (Exception e) {
-            System.err.println("Error desconocido.");
-        }
-
-        System.out.println("Imagen del camino generado correctamente.");
-
-    }
     public void crear_txt(ArrayList<Nodo> solucion, String ruta, int estrategia) {
-        Main m = new Main();
         String cadena = "";
-        boolean seguir = true;
 
         cadena += "[id][cost,state,father_id,action,depth,h,value]\n";
 
-        while (seguir) {
-            if (solucion.isEmpty()) {
-                seguir = false;
-            } else {
-                cadena += solucion.get(0).toString() + "\n";
-                solucion.remove(0);
-            }
+        for (int i = solucion.size(); i >= 0; i--) {
+            cadena += solucion.get(0).toString() + "\n";
         }
+
         String estrate = null;
         switch (estrategia) {
             case 1:
