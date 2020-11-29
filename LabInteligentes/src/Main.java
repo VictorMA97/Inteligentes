@@ -217,8 +217,8 @@ public class Main {
 
         cadena += "[id][cost,state,father_id,action,depth,h,value]\n";
 
-        for (int i = solucion.size(); i >= 0; i--) {
-            cadena += solucion.get(0).toString() + "\n";
+        for(int i = solucion.size()-1;i>=0;i--) {
+        	cadena+=solucion.get(i).toString() +"\n";
         }
 
         String estrate = null;
