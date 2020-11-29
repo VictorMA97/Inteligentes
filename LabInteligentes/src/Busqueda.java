@@ -1,75 +1,203 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Laberintos;
 
 import java.util.ArrayList;
-import java.util.Stack;
+import java.util.Collections;
+import java.util.Random;
 
+/**
+ *
+ * @author vic_s
+ */
 public class Busqueda {
+    
+    public static int id = 0;
 
-    public ArrayList busqueda() {
-        ArrayList solucion = new ArrayList<>();
-        
-        Stack visitado =new Stack();
+    public ArrayList<Nodo> busquedaSolucion(Problema problema, int profundidad, int estrategia) {
+        ArrayList<Celda> visitados = new ArrayList<>();
+        ArrayList<Nodo> frontera = new ArrayList<>();
 
-        return solucion;
+        //System.out.println("LA PILA TIENE EL COMPARADOR:" + frontera.());
+        Celda estado = problema.getInicial();
+        String accion = "none"; //la accion del nodo N,E,S,O
+        int profundidadNodo = 0;
+        int costo_acumulado = 0;
+        int heuristica = heuristica(problema, problema.getInicial());
+        Nodo nodo = new Nodo(id, estado, null, accion, profundidadNodo, costo_acumulado, heuristica);
+        System.out.println("Nodo inicial:" + nodo.toString());
+        System.out.println("Nodo final:" + problema.getObjetivo().toString());
+        double valor = calcula(estrategia, nodo);
+        nodo.setValor(valor);
+
+        frontera.add(nodo);
+
+        boolean solucion = false;
+        while (!frontera.isEmpty() && !solucion) {
+
+            nodo = frontera.get(0); //Esto hay que revisarlo
+            frontera.remove(0);
+            System.out.println("Nodo actual:" + nodo.toString());
+            System.out.println("Condicion 1:" + (!visitados.contains(nodo.getEstado())));
+            System.out.println("Condicion 2: " + (nodo.getProfundidad() < profundidad));
+
+            if (problema.isObjetivo(nodo.getEstado())) {
+                //Collections.sort(frontera, new comparadorNodo());
+                System.out.println("Nodo objetivo en if objetivo: " + nodo.getEstado().toString());
+                solucion = true;
+            } else if ((!visitados.contains(nodo.getEstado())) && (nodo.getProfundidad() < profundidad)) {
+
+                //echarle un ojito
+                ArrayList<Nodo> lista_hijos_nodo = expandir_nodo(problema, nodo, estrategia, visitados);
+
+                for (int i = 0; i < lista_hijos_nodo.size(); i++) {
+                    Nodo aux = lista_hijos_nodo.get(i);
+
+                    frontera.add(aux);
+                    Collections.sort(frontera, new comparadorNodo());
+
+                }
+                frontera = podar(frontera, visitados);
+
+            }
+        }
+        if (solucion) {
+            System.out.println("Resuelto");
+            return devolver_camino(nodo);
+        } else {
+            System.out.println("No tiene solucion");
+            return null;
+        }
     }
 
-    /*    BUSQUEDA(Problema, profundidad, estrategia)
+    private ArrayList<Nodo> devolver_camino(Nodo nodo) {
+        ArrayList<Nodo> camino = new ArrayList<>();
+        while (nodo != null) {
+            System.out.println(nodo.toString() + "\n");
+            camino.add(nodo);
+            nodo = nodo.getPadre();
 
+        }
 
-: solución
+        return camino;
+    }
 
-visitado = vacio
-frontera = frontera vacia
+    private ArrayList<Nodo> expandir_nodo(Problema problema, Nodo actual, int estrategia, ArrayList<Celda> visitados) {
 
-#Nodo Inicial
-nodo = crea nodo
-nodo.padre = nadie
-nodo.estado = Problema.EstadoInicial
-nodo.costo = 0
-nodo.profundidad = 0
-nodo.acción = Ninguna
-nodo.heurística = Heuristica(Problema, nodo.estado)
-nodo.valor = calcula(estrategia,nodo)
+        ArrayList<Nodo> lnodo = new ArrayList<>();
 
-insertar nodo en frontera
+        Celda[][] laberinto = problema.getLaberinto();
 
-solución = Falso
+        Nodo padre = actual;
 
-Mientras (frontera no es vacia) y (no hay solución) hacer
+        Celda nEstado = actual.getEstado();
 
-    nodo = frontera.primer_elemento()
-    
-    Si Problema.objetivo(nodo.estado) entonces
-        solución = Verdad
-    Sino Si (nodo.estado no está en visitado) y (nodo.profundidad < profundidad) entonces
-        insertar nodo.estado en visitados
-        lista_de_nodos_hijos = EXPANDIR_NODO(Problema, nodo, estrategia)
-        Para cada nodo_hijo en lista_de_nodos hacer
-            insertar nodo_hijo en frontera
-Si solución entonces
-    devolver camino(nodo)
-si no
-    devolver no hay solución
+        visitados.add(nEstado);
+        int fila = nEstado.getFila();
+        int columna = nEstado.getColumna();
+        int coste = actual.getCosto();
+        int superficie = 0;
+        int profundidad = actual.getProfundidad();
+        int heuristica = 0;
+        float valor = 0;
+        boolean[] vecinos = laberinto[nEstado.getFila()][nEstado.getColumna()].getVecinos();
 
+        Random r = new Random();
+        Nodo hijo;
 
+        // cambiar a expandido solo el padre
+        for (int i = 0; i < vecinos.length; i++) { //Recorrer hijos del padre
 
+            if (vecinos[i]) {
 
-EXPANDIR_NODO(Problema, nodo, estrategia): Lista de nodos
+                switch (i) {
+                    case 0:
 
-crear lista de nodos
+                        superficie =laberinto[fila - 1][columna].getSuperficie();
+                                        //(id, estado,                      padre, accion, profundidad,      costo,           heuristica)
+                        hijo = new Nodo(++id, laberinto[fila - 1][columna], padre, "N", profundidad + 1, coste + superficie + 1, heuristica);
+                        heuristica = heuristica(problema, hijo.getEstado());
+                        hijo.setHeuristica(heuristica);
+                        valor = calcula(estrategia, hijo);
+                        hijo.setValor(valor);
+                        lnodo.add(hijo);
+                        break;
+                    case 1:
+                        superficie =laberinto[fila][columna + 1].getSuperficie();
+                        hijo = new Nodo(++id, laberinto[fila][columna + 1], padre, "E", profundidad + 1, coste + superficie + 1, heuristica);
+                        heuristica = heuristica(problema, hijo.getEstado());
+                        hijo.setHeuristica(heuristica);
+                        valor = calcula(estrategia, hijo);
+                        hijo.setValor(valor);
+                        lnodo.add(hijo);
+                        break;
 
-Para cada sucesor (acción,estado,costo) en Problema.sucesores(nodo.estado) hacer
-    crear nodoHijo
-    nodoHijo.estado = estado
-    nodoHijo.padre = nodo
-    nodoHijo.acción = acción
-    nodoHijo.profundidad = nodo.profundidad + 1
-    nodoHijo.costo = nodo.costo + costo
-    nodoHijo.heuristica = Heurística(Problema,estado)
-    nodoHijo.valor = calcula(estrategia,nodoHijo)
-    insertar nodoHijo en lista de nodos
+                    case 2:
+                        superficie = laberinto[fila + 1][columna].getSuperficie();
+                        hijo = new Nodo(++id, laberinto[fila + 1][columna], padre, "S", profundidad + 1, coste + superficie + 1, heuristica);
+                        heuristica = heuristica(problema, hijo.getEstado());
+                        hijo.setHeuristica(heuristica);
+                        valor = calcula(estrategia, hijo);
+                        hijo.setValor(valor);
+                        lnodo.add(hijo);
+                        break;
 
-devolver lista de nodos
-    
-     */
+                    case 3:
+                        superficie = laberinto[fila][columna - 1].getSuperficie();
+                        hijo = new Nodo(++id, laberinto[fila][columna - 1], padre, "O", profundidad + 1, coste + superficie + 1, heuristica);
+                        heuristica = heuristica(problema, hijo.getEstado());
+                        hijo.setHeuristica(heuristica);
+                        valor = calcula(estrategia, hijo);
+                        hijo.setValor(valor);
+                        lnodo.add(hijo);
+                        break;
+
+                }
+            }
+        }
+        
+        Collections.sort(lnodo, new comparadorNodo());
+        return lnodo;
+    }
+
+    private float calcula(int estrategia, Nodo nodo) {
+        float valor = 0;
+        switch (estrategia) {
+            case 1: // Profundidad primero en anchura
+                valor = nodo.getProfundidad();
+                break;
+            case 2: // Profundidad primero en profundidad
+                float abajo = 1 + nodo.getProfundidad();
+                valor = 1 / abajo;
+                break;
+            case 3: // Costo uniforme
+                valor = nodo.getCosto();
+                break;
+            case 4: // Voraz
+                valor = nodo.getHeuristica();
+                break;
+            case 5: // A*
+                valor = nodo.getHeuristica() + nodo.getCosto();
+                break;
+        }
+        return valor;
+    }
+
+    private int heuristica(Problema problema, Celda celda) {
+        return Math.abs(celda.getFila() - problema.getObjetivo().getFila()) + Math.abs(celda.getColumna() - problema.getObjetivo().getColumna());
+    }
+
+    private ArrayList<Nodo> podar(ArrayList<Nodo> frontera, ArrayList<Celda> visitados) {
+        for (int i = 0; i < frontera.size(); i++) {
+            Nodo aux = frontera.get(i);
+            if (visitados.contains(aux.getEstado())) {
+                frontera.remove(aux);
+            }
+        }
+        return frontera;
+    }
+
 }

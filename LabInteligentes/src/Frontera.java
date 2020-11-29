@@ -28,11 +28,12 @@ public class Frontera {
         return lista;
     }
 
-    public void setLista(PriorityQueue<Nodo> lista) {
-        this.lista = lista;
-    }
+    @Override
+	public String toString() {
+		return "" + lista + "";
+	}
 
-    public String toString() {
-        return "" + lista + "";
+	public void setLista(PriorityQueue<Nodo> lista) {
+        this.lista = lista;
     }
 }

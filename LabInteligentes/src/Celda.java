@@ -1,7 +1,5 @@
 package Laberintos;
 
-import java.util.Arrays;
-
 public class Celda {
 
     private int fila, columna;
@@ -11,6 +9,8 @@ public class Celda {
     private boolean expandido;
 
     private boolean[] neighbors = {false, false, false, false};
+    
+    private int superficie;
 
     public Celda(int x, int y) {
         visitado = false;
@@ -59,6 +59,14 @@ public class Celda {
     public void setVecinos(boolean[] vecinos) {
         this.neighbors = vecinos;
     }
+    
+    public void setSuperficie(int superficie) {
+        this.superficie = superficie;
+    }
+
+    public int getSuperficie() {
+        return superficie;
+    }
 
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -82,7 +90,7 @@ public class Celda {
 
     @Override
     public String toString() {
-        return "{ vecinos: " + Arrays.toString(neighbors) + "}";
+        return "("+fila+", "+columna+")";
 
     }
 

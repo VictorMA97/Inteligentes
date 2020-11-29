@@ -21,20 +21,20 @@ public class Fichero {
     }
 
     public ArrayList<ArrayList<Integer>> obtenerId() {
-        //ArrayList<ArrayList<Integer>> id_movimiento = new ArrayList<>();
-        ArrayList<Integer> a = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> id_movimiento = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> a = new ArrayList<Integer>();
         a.add(-1);
         a.add(0);
         id_movimiento.add(a);
-        ArrayList<Integer> b = new ArrayList<>();
+        ArrayList<Integer> b = new ArrayList<Integer>();
         b.add(0);
         b.add(1);
         id_movimiento.add(b);
-        ArrayList<Integer> c = new ArrayList<>();
+        ArrayList<Integer> c = new ArrayList<Integer>();
         c.add(1);
         c.add(0);
         id_movimiento.add(c);
-        ArrayList<Integer> d = new ArrayList<>();
+        ArrayList<Integer> d = new ArrayList<Integer>();
         d.add(0);
         d.add(-1);
         id_movimiento.add(d);
@@ -42,14 +42,14 @@ public class Fichero {
     }
 
     public Map<String, Celda> obtenerCelda(Celda[][] lab) {
-        //Map<String, Celda> cel = new LinkedHashMap<String, Celda>();
+        Map<String, Celda> cel = new LinkedHashMap<String, Celda>();
 
         for (int i = 0; i < lab.length; i++) {
             for (int j = 0; j < lab[0].length; j++) {
                 Celda celda = lab[i][j];
-                cells.put("(" + String.valueOf(i) + ", " + String.valueOf(j) + ")", celda);
+                cel.put("(" + String.valueOf(i) + ", " + String.valueOf(j) + ")", celda);
             }
         }
-        return cells;
+        return cel;
     }
 }

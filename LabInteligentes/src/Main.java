@@ -3,6 +3,7 @@ package Laberintos;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,8 +18,6 @@ public class Main {
     private Celda[][] laberinto;
     private Celda cInicio;
     private Celda cFin;
-    public static int id = -1;
-    Nodo solucion; //creo el nodo solucion
 
     public static void main(String[] args) {
         Main m = new Main();
@@ -29,246 +28,104 @@ public class Main {
 
         Scanner teclado = new Scanner(System.in);
         Gestor_Archivos ga = new Gestor_Archivos();
+        Busqueda b = new Busqueda();
         boolean bucle = false;
-        Sucesores sucesor = new Sucesores();
-        String rut;
         int estrategia;
+        Random r = new Random();
+        Celda inicial;
+        Celda objetivo;
+        Problema problema;
+        String rut;
+        ArrayList<Nodo> solucion = new ArrayList<>();
+        final int profundidad_maxima = 1000000;
         rut = null;
         int option = 0;
 
-        do {
+        try {
             System.out.println("1.Generar laberinto.\n2.Leer fichero json.\n3.Salir.");
             System.out.println("Introduza la opcion del menu: ");
-            try {
-                option = teclado.nextInt();
-                switch (option) {
-                    case 1:
-                        String ruta = ruta_json();
-                        estrategia = pedir_datos();
-                        Wilson w = new Wilson(laberinto.length, laberinto[0].length);
-                        w.generar();
-                        System.out.println("Laberinto generado.");
-                        System.arraycopy(w.getLaberinto(), 0, laberinto, 0, laberinto.length);
-                        laberinto = w.getLaberinto();
-                        dibujar(ruta);
-                        funcionSucesora(laberinto, ruta, sucesor, estrategia);
-                        ga.escribirArchivoJson(ruta, laberinto, sucesor);
-                        bucle = false;
-                        break;
-                    case 2:
-                        rut = ruta_json();
-                        Celda[][] aux = ga.leerJson(rut);
-                        laberinto = aux; // Leer json.
-                        // funcionSucesora(laberinto, rut, sucesor, estrategia); //Hacer polimorfismo
-                        bucle = false;
-                        break;
+            option = teclado.nextInt();
+        } catch (Exception e) {
+            System.err.println("Error solo datos numericos.");
 
-                    case 3:
-                        System.exit(0);
-                        break;
-                    default:
-                        System.err.println("Solo valores entre 1 y 3.");
-                        bucle = true;
+            menu();
+        }
+        switch (option) {
+            case 1:
+                String ruta = ruta_json();
+                pedir_datos();
+                Wilson w = new Wilson(laberinto.length, laberinto[0].length);
+                w.generar();
+                System.out.println("Laberinto generado.");
+                System.arraycopy(w.getLaberinto(), 0, laberinto, 0, laberinto.length);
+                laberinto = w.getLaberinto();
+                inicial = laberinto[r.nextInt(fila)][r.nextInt(columna)];
+                objetivo = laberinto[r.nextInt(fila)][r.nextInt(columna)];
+                problema = new Problema(inicial, objetivo, laberinto);
+                estrategia = pedirEstrategia();
+                solucion = b.busquedaSolucion(problema, profundidad_maxima, estrategia);
+                crear_txt(solucion, ruta, estrategia);
+                dibujar(ruta, solucion);
+                //funcionSucesora(laberinto, ruta, sucesor);
+                ga.escribirArchivoJson(ruta, laberinto, problema);
+
+                break;
+            case 2:
+                rut = ruta_json();
+                laberinto = ga.leerMaze(rut);
+                fila = laberinto.length;
+                columna = laberinto[0].length;
+                estrategia = pedirEstrategia();
+                inicial = ga.getcInicio();
+                objetivo = ga.getcFin();
+                problema = new Problema(inicial, objetivo, laberinto);
+                solucion = b.busquedaSolucion(problema, profundidad_maxima, estrategia);
+                crear_txt(solucion, rut, estrategia);
+                dibujar(rut, solucion);
+
+                break;
+
+            case 3:
+                System.exit(0);
+                break;
+            default:
+                if (option < 1 || option > 3) {
+                    System.err.println("Solo valores entre 1 y 3.");
+                    menu();
                 }
-            } catch (NumberFormatException e) {
-                System.err.println("Error solo datos numericos.");
-                bucle = true;
-            }
-        } while (bucle);
+                break;
+        }
+
         System.out.println("\nFin del programa");
     }
 
-    public void funcionSucesora(Celda[][] laberinto, String ruta, Sucesores suceso, int estrategia) {
-
-        Gestor_Archivos ga = new Gestor_Archivos();
-        Celda estado;
-        int heuristica;
-        String archivo = "";
-
+    private int pedirEstrategia() {
+        Scanner teclado = new Scanner(System.in);
+        int estrategia = 0;
         do {
-            cInicio = ga.getcInicio();
-            System.out.println(cInicio.getFila() + " , " + cInicio.getColumna());
-            cFin = ga.getcFin();
-        } while (cInicio.equals(cFin));
-        suceso.sucesores(cInicio, cFin);
-        System.out.println(cFin.getFila() + " , " + cFin.getColumna());
-        estado = cInicio;
-        heuristica = Math.abs(fila - estado.getFila()) + Math.abs(columna - estado.getColumna());
-        Nodo nodo = new Nodo(null, cInicio, ++id, 0, 0, heuristica, estrategia);
+            System.out.print("\nElige estrategia para resolver el laberinto.\n 1.Anchura.\n 2,Profundidad.\n 3.Costo uniforme.\n 4. Voraz.\n 5. A*. \n");
+            estrategia = teclado.nextInt();
 
-        Frontera frontera = new Frontera();
-        frontera.insertar(nodo);
-        Nodo aux = nodo;
-        Nodo siguiente;
-        boolean objetivo = false;
-
-        while (!objetivo && !frontera.isEmpty()) {
-
-            aux = frontera.eliminar();
-
-            if (!aux.getEstado().isExpandido()) {
-
-                System.out.print("\nSUC((" + aux.getEstado().getFila() + "," + aux.getEstado().getColumna() + "))=");
-
-                archivo += "\nSUC((" + aux.getEstado().getFila() + "," + aux.getEstado().getColumna() + "))=";
-                archivo += expandir(aux, laberinto, frontera, estrategia);
-
-                solucion = funcionObjetivo(frontera);
-
-                if (solucion.getEstado().equals(cFin)) {
-
-                    objetivo = true;
-                }
-
-            } else {
-                --id;
-            }
-
-            siguiente = frontera.eliminar();
-        }
-        ruta += "\\Sucesores_" + fila + "x" + columna + ".txt";
-        File f = new File(ruta);
-        try {
-            FileWriter fw = new FileWriter(f);
-            fw.write(archivo);
-            fw.close();
-            System.out.println("\nFichero txt creado.");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            System.err.println("Error al crear el fichero txt.");
-        }
-
-        ArrayList<Nodo> soluciones = new ArrayList<Nodo>();
-        while (solucion.getPadre() != null) {
-            soluciones.add(solucion);
-            solucion = solucion.getPadre();
-        } //esto al final de funcion sucesora
+        } while (estrategia < 1 || estrategia > 5);
+        return estrategia;
     }
 
-    public Nodo funcionObjetivo(Frontera frontera) {
-
-        boolean objetivo = false;
-        Celda aux;
-        Nodo auxi = null;
-
-        while (!frontera.isEmpty()) {
-            auxi = frontera.eliminar();
-            aux = auxi.getEstado();
-            if ((aux.getFila()) == cFin.getFila() && (aux.getColumna()) == cFin.getColumna()) {
-                objetivo = true;
-                break;
-            }
-        }
-        return auxi;
-
-    }
-
-    public String expandir(Nodo actual, Celda[][] laberinto, Frontera frontera, int estrategia) {
-
-        Celda estado = actual.getEstado();
-        estado.setExpandido(true);
-        int fila = estado.getFila();
-        int columna = estado.getColumna();
-        int coste = actual.getCosto();
-        int profundidad = actual.getProfundidad();
-        int heuristica;
-        boolean[] vecinos = estado.getVecinos();
-        String expansion = "";
-        Random r = new Random();
-        Nodo n;
-        // cambiar a expandido solo el padre
-        for (int i = 0; i < vecinos.length; i++) {
-            if (vecinos[i]) {
-                int tipo;
-                switch (i) {
-                    case 0:
-                        tipo = r.nextInt(3);
-                        coste += tipo;
-                        heuristica = Math.abs((fila - 1) - cFin.getFila()) + Math.abs(columna - cFin.getColumna());
-                        n = new Nodo(actual, laberinto[fila - 1][columna], ++id, actual.getPadre().getCosto() + coste + 1, profundidad + 1, heuristica,
-                                estrategia);
-                        n.setHeuristica(heuristica);
-                        n.setTipo(tipo);
-                        n.setAccion('N');
-                        frontera.insertar(n);
-
-                        break;
-                    case 1:
-                        tipo = r.nextInt(3);
-                        coste += tipo;
-                        heuristica = Math.abs(fila - cFin.getFila()) + Math.abs((columna + 1) - cFin.getColumna());
-                        n = new Nodo(actual, laberinto[fila][columna + 1], ++id, coste + 1, profundidad + 1, actual.getPadre().getCosto() + coste + 1,
-                                estrategia);
-                        n.setHeuristica(heuristica);
-                        n.setTipo(tipo);
-                        n.setAccion('E');
-                        frontera.insertar(n);
-
-                        break;
-
-                    case 2:
-                        tipo = r.nextInt(3);
-                        coste += tipo;
-                        heuristica = Math.abs((fila + 1) - cFin.getFila()) + Math.abs(columna - cFin.getColumna());
-                        n = new Nodo(actual, laberinto[fila + 1][columna], ++id, coste + 1, profundidad + 1, actual.getPadre().getCosto() + coste + 1,
-                                estrategia);
-                        n.setHeuristica(heuristica);
-                        n.setTipo(tipo);
-                        n.setAccion('S');
-                        frontera.insertar(n);
-
-                        break;
-
-                    case 3:
-                        tipo = r.nextInt(3);
-                        coste += tipo;
-                        heuristica = Math.abs(fila - cFin.getFila()) + Math.abs((columna - 1) - cFin.getColumna());
-                        n = new Nodo(actual, laberinto[fila][columna - 1], ++id, coste + 1, profundidad + 1, actual.getPadre().getCosto() + coste + 1,
-                                estrategia);
-                        n.setHeuristica(heuristica);
-                        n.setTipo(tipo);
-                        n.setAccion('O');
-                        frontera.insertar(n);
-
-                        break;
-                }
-            }
-        }
-        if (!frontera.isEmpty()) {
-            System.out.print(frontera.getLista());
-            expansion = frontera.getLista().toString();
-        }
-        return expansion;
-    }
-
-    private int pedir_datos() {
+    private void pedir_datos() {
         Scanner teclado = new Scanner(System.in);
         boolean error = false;
-        boolean estr = false;
-        int estrategia = 0;
         do {
             try {
                 System.out.println("Introduce las filas que deseas:");
                 fila = teclado.nextInt();
                 System.out.println("Introduce las columnas que deseas:");
                 columna = teclado.nextInt();
-                do {
-                    System.out.print("\nElige estrategia para resolver el laberinto.\n 1.Anchura.\n 2,Profundidad.\n 3.Costo uniforme.\n 4. Voraz.\n 5. A*. \n");
-                    estrategia = teclado.nextInt();
-                    if (estrategia < 1 || estrategia > 5) {
-                        System.err.println("Seleccione solo valores indicados en el menu.");
-                    } else {
-                        estr = true;
-                    }
-                } while (estr);
-            } catch (NumberFormatException e) {
-                System.err.println("Error solo datos numericos.");
+
+            } catch (Exception e) {
+                System.out.println("Error solo datos numericos.");
                 error = true;
             }
         } while (error);
         laberinto = new Celda[fila][columna];
-        return estrategia;
-
     }
 
     private static String ruta_json() {
@@ -287,44 +144,53 @@ public class Main {
         return ruta;
     }
 
-    private void dibujar(String ruta) {
-        int tamano_celda = 10; // Tamaño de celda
-        try {
+    public void dibujar(String ruta, ArrayList<Nodo> solucion) {
+        int tamano_celda = 10; // Tama�o de celda
 
-            BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamano_celda + 5,
-                    laberinto.length * tamano_celda + 5, BufferedImage.TYPE_4BYTE_ABGR); // Pasar aqui filas y columnas
-            // del laberinto *100
-            Graphics g = lienzo.createGraphics();
-            g.setColor(Color.white);
-            g.fillRect(0, 0, laberinto[0].length * tamano_celda + 3, laberinto.length * tamano_celda + 3);
-            g.setColor(Color.black);
-            for (int i = 0; i < laberinto.length; i++) {
-                for (int j = 0; j < laberinto[0].length; j++) {
+        BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamano_celda + 5,
+                laberinto.length * tamano_celda + 5, BufferedImage.TYPE_4BYTE_ABGR); // Pasar aqui filas y columnas
+        // del laberinto *100
+        Graphics g = lienzo.createGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, laberinto[0].length * tamano_celda + 3, laberinto.length * tamano_celda + 3);
+        g.setColor(Color.black);
+        for (int i = 0; i < laberinto.length; i++) {
+            for (int j = 0; j < laberinto[0].length; j++) {
 
-                    boolean[] c = laberinto[i][j].getVecinos();
-                    int fila_aux = tamano_celda * i;
-                    int columna_aux = tamano_celda * j;
+                boolean[] c = laberinto[i][j].getVecinos();
+                int fila = tamano_celda * i;
+                int columna = tamano_celda * j;
 
-                    if (c[0] == false) {
-                        g.drawLine(columna_aux, fila_aux, columna_aux + tamano_celda, fila_aux); // dibujar norte
-                    }
+                if (c[0] == false) {
+                    g.drawLine(columna, fila, columna + tamano_celda, fila); // dibujar norte
+                }
 
-                    if (c[1] == false) {
-                        g.drawLine(columna_aux + tamano_celda, fila_aux, columna_aux + tamano_celda, fila_aux + tamano_celda); // dibujar
-                        // este
-                    }
+                if (c[1] == false) {
+                    g.drawLine(columna + tamano_celda, fila, columna + tamano_celda, fila + tamano_celda); // dibujar
+                    // este
+                }
 
-                    if (c[2] == false) {
-                        g.drawLine(columna_aux + tamano_celda, fila_aux + tamano_celda, columna_aux, fila_aux + tamano_celda); // dibujar
-                        // sur
-                    }
+                if (c[2] == false) {
+                    g.drawLine(columna + tamano_celda, fila + tamano_celda, columna, fila + tamano_celda); // dibujar
+                    // sur
+                }
 
-                    if (c[3] == false) {
-                        g.drawLine(columna_aux, fila_aux + tamano_celda, columna_aux, fila_aux); // dibujar oeste
-                    }
+                if (c[3] == false) {
+                    g.drawLine(columna, fila + tamano_celda, columna, fila); // dibujar oeste
                 }
             }
-            ruta += "\\puzzle_" + laberinto[0].length + "x" + laberinto.length + ".jpg";
+        }
+        
+        for (int i = 0; i< solucion.size(); i++){
+            Celda aux = solucion.get(i).getEstado();
+            g.setColor(Color.red);
+            
+            g.fillRect(aux.getFila(), aux.getColumna(), aux.getFila()*tamano_celda, aux.getColumna()*tamano_celda);
+            //g.fillRect(aux.getFila() * tamano_celda, aux.getColumna() * tamano_celda, aux.getFila() * tamano_celda + tamano_celda , aux.getColumna() * tamano_celda + tamano_celda);
+        }
+        
+        try {
+            ruta += "\\puzzle_" + laberinto.length + "x" + laberinto[0].length + ".jpg";
             System.out.println(ruta);
             ImageIO.write(lienzo, "png", new File(ruta));
         } catch (IOException ex) {
@@ -332,7 +198,81 @@ public class Main {
         } catch (Exception e) {
             System.err.println("Error desconocido.");
         }
+
         System.out.println("Imagen generada correctamente.");
+    }
+
+    public void pintarCamino(ArrayList<Nodo> solucion, String ruta, Graphics g) {
+        int tamano_celda = 10; // Tama�o de celda
+        BufferedImage lienzo = new BufferedImage(laberinto[0].length * tamano_celda + 5,
+                laberinto.length * tamano_celda + 5, BufferedImage.TYPE_4BYTE_ABGR); // Pasar aqui filas y columnas
+        
+        
+        
+        for (int i = 0; i< solucion.size(); i++){
+            Celda aux = solucion.get(i).getEstado();
+            g.setColor(Color.red);
+            g.fillRect(0, 0, aux.getFila() * tamano_celda, aux.getColumna() * tamano_celda);
+            
+            
+        }
+        try {
+            ruta += "\\sol_" + laberinto.length + "x" + laberinto[0].length + ".jpg";
+            System.out.println(ruta);
+            ImageIO.write(lienzo, "png", new File(ruta));
+        } catch (IOException ex) {
+            System.err.println("Error en el buffer al dibujar");
+        } catch (Exception e) {
+            System.err.println("Error desconocido.");
+        }
+
+        System.out.println("Imagen del camino generado correctamente.");
+
+    }
+    public void crear_txt(ArrayList<Nodo> solucion, String ruta, int estrategia) {
+        Main m = new Main();
+        String cadena = "";
+        boolean seguir = true;
+
+        cadena += "[id][cost,state,father_id,action,depth,h,value]\n";
+
+        while (seguir) {
+            if (solucion.isEmpty()) {
+                seguir = false;
+            } else {
+                cadena += solucion.get(0).toString() + "\n";
+                solucion.remove(0);
+            }
+        }
+        String estrate = null;
+        switch (estrategia) {
+            case 1:
+                estrate = "BREADTH";
+                break;
+            case 2:
+                estrate = "DEPTH";
+                break;
+            case 3:
+                estrate = "UNIFORM";
+                break;
+            case 4:
+                estrate = "GREEDY";
+                break;
+            case 5:
+                estrate = "A";
+                break;
+        }
+        String nombre = "\\sol_" + fila + "x" + columna + "_" + estrate + "NUESTRO.txt";
+        ruta = ruta + nombre;
+        try {
+            FileWriter fw = new FileWriter(new File(ruta));
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(cadena);
+            bw.close();
+            System.out.println("\nFichero txt creado.");
+        } catch (IOException e) {
+            System.err.println("Error al escribir el archivo txt.");
+        }
     }
 
     public int getFila() {
